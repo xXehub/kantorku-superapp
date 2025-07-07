@@ -1,14 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\Master\MasterDashboardController;
-use App\Http\Controllers\Master\RoleController;
-use App\Http\Controllers\Master\UserController;
-use App\Http\Controllers\Master\MasterAppController;
-use App\Http\Controllers\Master\InstansiController;
-use App\Http\Controllers\Master\PermissionController;
-use App\Http\Controllers\App\AppDashboardController;
+use App\Http\Controllers\Client\ClientController;
+use App\Http\Controllers\Panel\DashboardController;
+use App\Http\Controllers\Panel\UserController;
+use App\Http\Controllers\Panel\RoleController;
+use App\Http\Controllers\Panel\AppController as PanelAppController;
+use App\Http\Controllers\Panel\InstansiController;
+use App\Http\Controllers\Panel\PermissionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,44 +15,45 @@ Route::get('/', function () {
 
 Auth::routes();
 
+// Redirect old routes to new system
 Route::get('/home', function () {
-    return redirect()->route('dashboard');
+    return redirect()->route('client');
 })->name('home');
 
-// Global Dashboard - accessible by all authenticated users
+Route::get('/dashboard', function () {
+    return redirect()->route('client');
+})->name('dashboard');
+
+Route::get('/beranda', function () {
+    return redirect()->route('client');
+})->name('beranda');
+
+// NEW 2-TIER VIEW SYSTEM
+
+// Tier 1: "Client" - accessible by all authenticated users (default landing page)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/beranda', [ClientController::class, 'index'])->name('client');
 });
 
-// Master Panel - only for superadmin
-Route::middleware(['auth'])->prefix('master')->name('master.')->group(function () {
-    Route::get('/dashboard', [MasterDashboardController::class, 'index'])->name('dashboard');
+// Tier 2: "Panel" - only for users with non-default permissions
+Route::middleware(['auth', 'has.panel.access'])->prefix('panel')->name('panel.')->group(function () {
+    // Main Panel Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Role management
+    // User Management
+    Route::resource('users', UserController::class);
+
+    // Role Management  
     Route::resource('roles', RoleController::class);
     Route::get('roles/{role}/permissions', [RoleController::class, 'permissions'])->name('roles.permissions');
     Route::put('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
 
-    // Permission management
+    // Permission Management
     Route::resource('permissions', PermissionController::class);
 
-    // User management  
-    Route::resource('users', UserController::class);
-    Route::get('users/{user}/assignments', [UserController::class, 'assignments'])->name('users.assignments');
-    Route::post('users/{user}/assignments', [UserController::class, 'addAssignment'])->name('users.addAssignment');
-    Route::delete('users/{user}/assignments/{userApp}', [UserController::class, 'removeAssignment'])->name('users.removeAssignment');
+    // App Management
+    Route::resource('apps', PanelAppController::class);
 
-    // Master App management
-    Route::resource('master-app', MasterAppController::class);
-
-    // Instansi management
+    // Instansi Management
     Route::resource('instansi', InstansiController::class);
-});
-
-// Dynamic Instansi App Routes - {instansi}/{app}/admin/*
-Route::middleware(['auth'])->group(function () {
-    Route::get('/{instansi}/{app}/admin/dashboard', [AppDashboardController::class, 'index'])->name('app.dashboard');
-    Route::get('/{instansi}/{app}/admin', function ($instansi, $app) {
-        return redirect()->route('app.dashboard', [$instansi, $app]);
-    });
 });

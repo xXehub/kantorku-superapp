@@ -40,35 +40,17 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         @auth
-                            @if(auth()->user()->isSuperAdmin())
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Master Panel
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('client') ? 'active' : '' }}" href="{{ route('client') }}">
+                                    <i class="fas fa-home"></i> Beranda
+                                </a>
+                            </li>
+                            
+                            @if(auth()->user()->hasNonDefaultPermissions())
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->routeIs('panel.*') ? 'active' : '' }}" href="{{ route('panel.dashboard') }}">
+                                        <i class="fas fa-cogs"></i> Panel
                                     </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="{{ route('master.dashboard') }}">Master Dashboard</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{{ route('master.users.index') }}">Manage Users</a>
-                                        <a class="dropdown-item" href="{{ route('master.roles.index') }}">Manage Roles</a>
-                                        <a class="dropdown-item" href="{{ route('master.master-app.index') }}">Manage Apps</a>
-                                        <a class="dropdown-item" href="{{ route('master.instansi.index') }}">Manage Instansi</a>
-                                    </div>
-                                </li>
-                            @elseif(auth()->user()->isAdmin())
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        Master Panel
-                                    </a>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="{{ route('master.dashboard') }}">Dashboard</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{{ route('master.users.index') }}">Manage Users</a>
-                                        <a class="dropdown-item" href="{{ route('master.roles.index') }}">Manage Roles</a>
-                                        <a class="dropdown-item" href="{{ route('master.permissions.index') }}">Manage Permissions</a>
-                                        <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="{{ route('master.master-app.index') }}">Manage Apps</a>
-                                        <a class="dropdown-item" href="{{ route('master.instansi.index') }}">Manage Instansi</a>
-                                    </div>
                                 </li>
                             @endif
                         @endauth
@@ -103,12 +85,19 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('dashboard') }}">Dashboard</a>
+                                    <a class="dropdown-item" href="{{ route('client') }}">
+                                        <i class="fas fa-home"></i> Beranda
+                                    </a>
+                                    @if(auth()->user()->hasNonDefaultPermissions())
+                                        <a class="dropdown-item" href="{{ route('panel.dashboard') }}">
+                                            <i class="fas fa-cogs"></i> Panel
+                                        </a>
+                                    @endif
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
+                                        <i class="fas fa-sign-out-alt"></i> {{ __('Logout') }}
                                     </a>
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">

@@ -155,7 +155,7 @@ class User extends Authenticatable
             return true;
         }
         
-        return $this->role && $this->role->name === $role;
+        return $this->role && $this->role->nama_role === $role;
     }
 
     public function hasPermission($permission, $appId = null, $instansiId = null)
@@ -188,18 +188,38 @@ class User extends Authenticatable
         return $this->hasPermission($permission, $appId, $instansiId);
     }
 
+    /**
+     * Check if user has permissions beyond default role
+     */
+    public function hasNonDefaultPermissions(): bool
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+        
+        if (!$this->role) {
+            return false;
+        }
+        
+        // Check if user has permissions beyond basic dashboard.view
+        $basicPermissions = ['dashboard.view'];
+        $userPermissions = $this->role->permissions->pluck('name')->toArray();
+        
+        return count(array_diff($userPermissions, $basicPermissions)) > 0;
+    }
+
     public function isAdmin()
     {
-        return $this->isSuperAdmin() || $this->hasRole('admin');
+        return $this->isSuperAdmin() || $this->hasRole('Administrator');
     }
 
     public function isManager()
     {
-        return $this->hasRole('manager');
+        return $this->hasRole('Manager');
     }
 
     public function isUser()
     {
-        return $this->hasRole('user');
+        return $this->hasRole('User');
     }
 }
