@@ -67,8 +67,9 @@ class AppController extends Controller
         }
 
         $rules = [
+            'kode_app' => 'required|string|max:255',
             'nama_app' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'deskripsi_app' => 'nullable|string',
             'url_app' => 'nullable|url|max:255',
             'icon' => 'nullable|string|max:255',
             'is_active' => 'boolean'
@@ -117,13 +118,32 @@ class AppController extends Controller
     {
         $user = auth()->user();
 
-        // Check access permissions
-        if (!$user->isSuperAdmin() && !$user->isAdmin()) {
-            abort(403, 'Access denied.');
-        }
+        // Debug logging
+        \Log::info('AppController@edit debug', [
+            'user_id' => $user->id,
+            'is_superadmin_raw' => $user->is_superadmin,
+            'isSuperAdmin_method' => $user->isSuperAdmin(),
+            'isAdmin_method' => $user->isAdmin(),
+            'app_id' => $app->id,
+            'app_instansi_id' => $app->instansi_id,
+            'user_instansi_id' => $user->instansi_id
+        ]);
 
-        if ($user->isAdmin() && $app->instansi_id !== $user->instansi_id) {
-            abort(403, 'Access denied.');
+        // Check access permissions - Superadmin should bypass all checks
+        if (!$user->isSuperAdmin()) {
+            if (!$user->isAdmin()) {
+                \Log::warning('AppController@edit: Access denied - not admin or superadmin', ['user_id' => $user->id]);
+                abort(403, 'Access denied.');
+            }
+            
+            if ($user->isAdmin() && $app->instansi_id !== $user->instansi_id) {
+                \Log::warning('AppController@edit: Access denied - admin trying to edit app from different instansi', [
+                    'user_id' => $user->id,
+                    'user_instansi_id' => $user->instansi_id,
+                    'app_instansi_id' => $app->instansi_id
+                ]);
+                abort(403, 'Access denied.');
+            }
         }
 
         $instansi = $user->isSuperAdmin() ? Instansi::all() : Instansi::where('id', $user->instansi_id)->get();
@@ -148,8 +168,9 @@ class AppController extends Controller
         }
 
         $rules = [
+            'kode_app' => 'required|string|max:255',
             'nama_app' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
+            'deskripsi_app' => 'nullable|string',
             'url_app' => 'nullable|url|max:255',
             'icon' => 'nullable|string|max:255',
             'is_active' => 'boolean'

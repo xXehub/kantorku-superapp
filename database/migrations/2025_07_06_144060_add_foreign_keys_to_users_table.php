@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('role_id')->nullable()->after('is_superadmin')->constrained('roles')->onDelete('set null');
+            $table->foreignId('role_id')->nullable()->after('is_superadmin')->constrained('role')->onDelete('set null');
             $table->foreignId('instansi_id')->nullable()->after('role_id')->constrained('instansi')->onDelete('set null');
             $table->foreignId('app_id')->nullable()->after('instansi_id')->constrained('master_app')->onDelete('set null'); // for admin users who manage specific app
         });

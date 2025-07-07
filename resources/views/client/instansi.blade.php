@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', $instansi->nama_instansi . ' - KantorKu SuperApp')
-
-@section('content')
+<x-app>
 <div class="container-fluid">
     <!-- Header -->
     <div class="row mb-4">
@@ -200,4 +196,4 @@
         </div>
     @endif
 </div>
-@endsection
+</x-app>

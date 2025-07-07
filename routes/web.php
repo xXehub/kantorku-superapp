@@ -9,6 +9,11 @@ use App\Http\Controllers\Panel\AppController as PanelAppController;
 use App\Http\Controllers\Panel\InstansiController;
 use App\Http\Controllers\Panel\PermissionController;
 
+// Include debug routes
+if (file_exists(__DIR__ . '/debug.php')) {
+    include __DIR__ . '/debug.php';
+}
+
 Route::get('/', function () {
     return view('welcome');
 });

@@ -1,8 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Manajemen Aplikasi - Panel')
-
-@section('content')
+<x-app>
 <div class="container-fluid">
     <!-- Header -->
     <div class="row mb-4">
@@ -219,7 +215,7 @@
         </div>
     </div>
 </div>
-@endsection
+</x-app>
 
 @push('scripts')
 <script>
