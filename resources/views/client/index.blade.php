@@ -1,248 +1,158 @@
-<x-app title="Client Area - KantorKu SuperApp">
-    <div class="container-fluid">
-        <!-- Hero Section -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <h2 class="mb-2">
-                                    <i class="fas fa-home"></i> Selamat Datang, {{ auth()->user()->name }}!
-                                </h2>
-                                <p class="mb-0">
-                                    Sistem Informasi Terintegrasi Pemerintah Kota Surabaya
-                                </p>
-                                @if (auth()->user()->instansi)
-                                    <small class="opacity-75">
-                                        <i class="fas fa-building"></i> {{ auth()->user()->instansi->nama_instansi }}
-                                    </small>
-                                @endif
-                            </div>
-                            <div class="col-md-4 text-end">
-                                @if ($hasPanelAccess)
-                                    <a href="{{ route('panel.dashboard') }}" class="btn btn-light btn-lg">
-                                        <i class="fas fa-cogs"></i> Panel Manajemen
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+   <x-app>
+       <div class="page-body">
+           <div class="container-xl">
+               <div class="row row-deck row-cards">
+                   <!-- ENJUY -->
+                   <div class="card p-4 mb-4 rounded shadow-sm border">
+                       <h2 class="mb-2 fw-bold">Layanan SuperApp</h2>
+                       <p class="mb-4 text-secondary" style="max-width: 700px;">
+                           SuperApp adalah platform layanan digital terpadu yang dirancang untuk memudahkan masyarakat
+                           dalam mengakses berbagai layanan publik dari berbagai instansi pemerintahan di Kota Surabaya.
+                           Melalui satu pintu aplikasi ini, pengguna dapat menjelajahi, mengajukan, dan memantau layanan
+                           dari dinas-dinas seperti Pendidikan, Kominfo, Kesehatan, hingga Perizinan.
+                       </p>
+                       <a href="#" class="btn btn-outline-primary position-absolute"
+                           style="bottom: 1rem; right: 1rem; padding: 0.20rem 1.5rem; font-size: 0.75rem;">
+                           <i class="ti ti-book me-1"></i> Panduan Pengguna
+                       </a>
+                   </div>
+                   <div class="d-flex justify-content-between flex-wrap align-items-center mb-3 gap-2">
+                       <!-- Filter buttons -->
+                       <div class="form-selectgroup d-flex flex-wrap gap-2">
+                           <label class="form-selectgroup-item">
+                               <input type="radio" name="icons" value="tampilkan semua"
+                                   class="form-selectgroup-input" checked />
+                               <span class="form-selectgroup-label">
+                                   Tampilkan Semua
+                               </span>
+                           </label>
+                           <label class="form-selectgroup-item">
+                               <input type="radio" name="icons" value="kesehatan" class="form-selectgroup-input" />
+                               <span class="form-selectgroup-label">
+                                   Kesehatan
+                               </span>
+                           </label>
+                           <label class="form-selectgroup-item">
+                               <input type="radio" name="icons" value="pendidikan" class="form-selectgroup-input" />
+                               <span class="form-selectgroup-label">
+                                   Pendidikan
+                               </span>
+                           </label>
+                           <label class="form-selectgroup-item">
+                               <input type="radio" name="icons" value="pariwisata" class="form-selectgroup-input" />
+                               <span class="form-selectgroup-label">
+                                   Pariwisata
+                               </span>
+                           </label>
+                       </div>
 
-        <!-- Quick Stats -->
-        <div class="row mb-4">
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-mobile-alt fa-2x text-primary mb-2"></i>
-                        <h4>{{ $apps->count() }}</h4>
-                        <p class="text-muted">Aplikasi Tersedia</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-building fa-2x text-success mb-2"></i>
-                        <h4>{{ $instansi->count() }}</h4>
-                        <p class="text-muted">Instansi Aktif</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-user-circle fa-2x text-info mb-2"></i>
-                        <h4>{{ auth()->user()->role ? auth()->user()->role->nama_role : 'User' }}</h4>
-                        <p class="text-muted">Role Anda</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <i class="fas fa-calendar fa-2x text-warning mb-2"></i>
-                        <h4>{{ auth()->user()->created_at->format('M Y') }}</h4>
-                        <p class="text-muted">Bergabung Sejak</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+                       <!-- Search bar -->
+                       <div class="d-flex align-items-center" style="max-width: 250px;">
+                           <input type="text" class="form-control" placeholder="Cari …" />
+                           <a href="#" class="btn btn-2 btn-icon" aria-label="Button">
+                               <!-- Download SVG icon from http://tabler.io/icons/icon/search -->
+                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                   fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                   stroke-linejoin="round" class="icon icon-2">
+                                   <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                                   <path d="M21 21l-6 -6" />
+                               </svg>
+                           </a>
+                       </div>
+                   </div>
+                   <!-- BUAT LIST DINAS -->
+                   @foreach ($instansi as $item)
+                   <div class="col-md-6 col-lg-3">
+                       <div class="card">
+                           <div class="card-body p-4 text-center">
+                               @if($item->logo_url)
+                                   <span class="avatar avatar-xl mb-3"
+                                       style="background-image: url({{ $item->logo_url }})">
+                                   </span>
+                               @else
+                                   <span class="avatar avatar-xl mb-3">
+                                       {{ strtoupper(substr($item->nama_instansi, 0, 1)) }}
+                                   </span>
+                               @endif
+                               <h3 class="m-0 mb-1"><a href="#">{{ $item->nama_instansi }}</a></h3>
+                               <div class="text-secondary">
+                                   {{ $item->deskripsi }}
+                               </div>
+                           </div>
+                           <div class="d-flex">
+                               <a href="{{ route('client.instansi.show', $item->id) }}" class="card-btn">Selengkapnya</a>
+                           </div>
+                       </div>
+                   </div>
+                   @endforeach
+                   <!-- end buat list dinas -->
+                   <div class="card-footer d-flex align-items-center">
+                       <p class="m-0 text-secondary">Showing <span>{{ $instansi->firstItem() }}</span> to <span>{{ $instansi->lastItem() }}</span> of <span>{{ $instansi->total() }}</span>
+                           entries</p>
+                       <ul class="pagination m-0 ms-auto">
+                           @if ($instansi->onFirstPage())
+                               <li class="page-item disabled">
+                                   <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                           stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                           <path d="M15 6l-6 6l6 6" />
+                                       </svg>
+                                       prev
+                                   </a>
+                               </li>
+                           @else
+                               <li class="page-item">
+                                   <a class="page-link" href="{{ $instansi->previousPageUrl() }}">
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                           stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                           <path d="M15 6l-6 6l6 6" />
+                                       </svg>
+                                       prev
+                                   </a>
+                               </li>
+                           @endif
 
-        <div class="row">
-            <!-- Aplikasi Tersedia -->
-            <div class="col-lg-8">
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">
-                            <i class="fas fa-mobile-alt text-primary"></i> Aplikasi Tersedia
-                        </h5>
-                        <span class="badge bg-primary">{{ $apps->count() }} aplikasi</span>
-                    </div>
-                    <div class="card-body">
-                        @if ($apps->count() > 0)
-                            <div class="row">
-                                @foreach ($apps as $app)
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card h-100 border">
-                                            <div class="card-body">
-                                                <div class="d-flex align-items-start">
-                                                    <div class="flex-shrink-0">
-                                                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                                                            style="width: 50px; height: 50px;">
-                                                            <i class="fas fa-cube"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <h6 class="mb-1">{{ $app->nama_app }}</h6>
-                                                        <p class="text-muted small mb-2">
-                                                            {{ Str::limit($app->deskripsi_app, 80) }}</p>
-                                                        <div class="d-flex justify-content-between align-items-center">
-                                                            <span
-                                                                class="badge bg-success">{{ $app->instansi->nama_instansi }}</span>
-                                                            <div class="d-flex gap-2">
-                                                                @if ($app->url_app)
-                                                                    <a href="{{ $app->url_app }}" target="_blank"
-                                                                        class="btn btn-sm btn-outline-primary">
-                                                                        <i class="fas fa-external-link-alt"></i> Buka
-                                                                    </a>
-                                                                @else
-                                                                    <span class="text-muted small">Coming Soon</span>
-                                                                @endif
-                                                                @if (
-                                                                    $hasPanelAccess &&
-                                                                        (auth()->user()->is_superadmin ||
-                                                                            auth()->user()->app_id == $app->id ||
-                                                                            auth()->user()->instansi_id == $app->instansi_id))
-                                                                    <a href="{{ route('panel.apps.edit', $app->id) }}"
-                                                                        class="btn btn-sm btn-outline-warning">
-                                                                        <i class="fas fa-cog"></i> Setting
-                                                                    </a>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="text-center py-4">
-                                <i class="fas fa-mobile-alt fa-3x text-muted mb-3"></i>
-                                <h5>Belum Ada Aplikasi</h5>
-                                <p class="text-muted">Aplikasi akan ditampilkan di sini setelah dikonfigurasi.</p>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
+                           @foreach ($instansi->getUrlRange(1, $instansi->lastPage()) as $page => $url)
+                               @if ($page == $instansi->currentPage())
+                                   <li class="page-item active"><a class="page-link" href="#">{{ $page }}</a></li>
+                               @else
+                                   <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                               @endif
+                           @endforeach
 
-            <!-- Sidebar Info -->
-            <div class="col-lg-4">
-                <!-- Profil Saya -->
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h6 class="mb-0">
-                            <i class="fas fa-user text-info"></i> Profil Saya
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-center mb-3">
-                            <div class="bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center"
-                                style="width: 60px; height: 60px;">
-                                <span class="h4 mb-0">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
-                            </div>
-                        </div>
-                        <table class="table table-sm">
-                            <tr>
-                                <td><strong>Nama:</strong></td>
-                                <td>{{ auth()->user()->name }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Email:</strong></td>
-                                <td>{{ auth()->user()->email }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Username:</strong></td>
-                                <td>{{ auth()->user()->username }}</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Role:</strong></td>
-                                <td>
-                                    @if (auth()->user()->role)
-                                        <span class="badge bg-primary">{{ auth()->user()->role->nama_role }}</span>
-                                    @else
-                                        <span class="text-muted">Belum ada role</span>
-                                    @endif
-                                </td>
-                            </tr>
-                            @if ($userInstansi)
-                                <tr>
-                                    <td><strong>Instansi:</strong></td>
-                                    <td>{{ $userInstansi->nama_instansi }}</td>
-                                </tr>
-                            @endif
-                            @if ($managedApp)
-                                <tr>
-                                    <td><strong>Mengelola:</strong></td>
-                                    <td>{{ $managedApp->nama_app }}</td>
-                                </tr>
-                            @endif
-                        </table>
-                    </div>
-                </div>
+                           @if ($instansi->hasMorePages())
+                               <li class="page-item">
+                                   <a class="page-link" href="{{ $instansi->nextPageUrl() }}">
+                                       next
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                           stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                           <path d="M9 6l6 6l-6 6" />
+                                       </svg>
+                                   </a>
+                               </li>
+                           @else
+                               <li class="page-item disabled">
+                                   <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+                                       next
+                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                           viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                           stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
+                                           <path d="M9 6l6 6l-6 6" />
+                                       </svg>
+                                   </a>
+                               </li>
+                           @endif
+                       </ul>
+                   </div>
 
-                <!-- Instansi Aktif -->
-                <div class="card">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">
-                            <i class="fas fa-building text-success"></i> Instansi Aktif
-                        </h6>
-                        <span class="badge bg-success">{{ $instansi->count() }} instansi</span>
-                    </div>
-                    <div class="card-body">
-                        @if ($instansi->count() > 0)
-                            <div class="row">
-                                @foreach ($instansi as $inst)
-                                    <div class="col-12 mb-3">
-                                        <div class="card border h-100">
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-between align-items-start">
-                                                    <div class="flex-grow-1">
-                                                        <h6 class="mb-1">{{ $inst->nama_instansi }}</h6>
-                                                        <p class="text-muted small mb-2">{{ $inst->apps_count }}
-                                                            aplikasi tersedia</p>
-                                                        <span class="badge bg-success">Aktif</span>
-                                                    </div>
-                                                    <div class="d-flex gap-2">
-                                                        <a href="{{ route('client.instansi.show', $inst->id) }}"
-                                                            class="btn btn-sm btn-outline-primary">
-                                                            <i class="fas fa-eye"></i> Selengkapnya
-                                                        </a>
-                                                        @if ($hasPanelAccess && (auth()->user()->is_superadmin || auth()->user()->instansi_id == $inst->id))
-                                                            <a href="{{ route('panel.instansi.edit', $inst->id) }}"
-                                                                class="btn btn-sm btn-outline-warning">
-                                                                <i class="fas fa-cog"></i> Setting
-                                                            </a>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-muted text-center">Belum ada instansi terdaftar.</p>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</x-app>
+
+               </div>
+
+           </div>
+
+       </div>
+
+   </x-app>

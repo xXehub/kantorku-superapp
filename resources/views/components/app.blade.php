@@ -64,19 +64,27 @@
     <script src="{{ asset('dist/js/tabler-theme.min.js?1744816593') }}"></script>
     {{-- <link href="{{ asset('dist/js/tabler-theme.min.js?1744816593') }}" /> --}}
     <!-- Loading Overlay -->
+{{-- 
     <div id="loading-overlay" class="loading-overlay d-none">
         <div class="text-center">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-2 text-muted">Memuat...</p>
+            <x-loading />
         </div>
-    </div>
+    </div> --}}
 
     <div id="app">
         <!-- Navigation -->
-
-        <x-navbar />
+        @if (
+            !in_array(Route::currentRouteName(), [
+                'login',
+                'register',
+                'password.request',
+                'password.reset',
+                'password.confirm',
+                'verification.notice',
+                'verification.verify',
+            ]))
+            <x-navbar />
+        @endif
         <!-- Main Content -->
         <main class="py-4">
             <!-- Flash Messages -->
@@ -125,7 +133,18 @@
         </main>
 
         <!-- Footer -->
-        <x-footer />
+        @if (
+            !in_array(Route::currentRouteName(), [
+                'login',
+                'register',
+                'password.request',
+                'password.reset',
+                'password.confirm',
+                'verification.notice',
+                'verification.verify',
+            ]))
+            <x-footer />
+        @endif
     </div>
 
     <!-- Profile Modal -->

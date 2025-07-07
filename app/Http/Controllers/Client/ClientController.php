@@ -33,8 +33,7 @@ class ClientController extends Controller
                 $query->where('is_active', true);
             }])
             ->latest()
-            ->take(6)
-            ->get();
+            ->paginate(8);
         
         // Check if user has panel access
         $hasPanelAccess = $user->hasNonDefaultPermissions();
