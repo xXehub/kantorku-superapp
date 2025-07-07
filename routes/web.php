@@ -32,7 +32,8 @@ Route::get('/beranda', function () {
 
 // Tier 1: "Client" - accessible by all authenticated users (default landing page)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/beranda', [ClientController::class, 'index'])->name('client');
+    Route::get('/client', [ClientController::class, 'index'])->name('client');
+    Route::get('/client/instansi/{id}', [ClientController::class, 'showInstansi'])->name('client.instansi.show');
 });
 
 // Tier 2: "Panel" - only for users with non-default permissions

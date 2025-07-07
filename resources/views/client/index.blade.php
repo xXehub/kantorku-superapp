@@ -104,13 +104,20 @@
                                                     <p class="text-muted small mb-2">{{ Str::limit($app->deskripsi_app, 80) }}</p>
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <span class="badge bg-success">{{ $app->instansi->nama_instansi }}</span>
-                                                        @if($app->url_app)
-                                                            <a href="{{ $app->url_app }}" target="_blank" class="btn btn-sm btn-outline-primary">
-                                                                <i class="fas fa-external-link-alt"></i> Buka
-                                                            </a>
-                                                        @else
-                                                            <span class="text-muted small">Coming Soon</span>
-                                                        @endif
+                                                        <div class="d-flex gap-2">
+                                                            @if($app->url_app)
+                                                                <a href="{{ $app->url_app }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                                                                    <i class="fas fa-external-link-alt"></i> Buka
+                                                                </a>
+                                                            @else
+                                                                <span class="text-muted small">Coming Soon</span>
+                                                            @endif
+                                                            @if($hasPanelAccess && (auth()->user()->is_superadmin || auth()->user()->app_id == $app->id || auth()->user()->instansi_id == $app->instansi_id))
+                                                                <a href="{{ route('panel.apps.edit', $app->id) }}" class="btn btn-sm btn-outline-warning">
+                                                                    <i class="fas fa-cog"></i> Setting
+                                                                </a>
+                                                            @endif
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -184,27 +191,43 @@
                 </div>
             </div>
 
-            <!-- Instansi Info -->
+            <!-- Instansi Aktif -->
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">
                         <i class="fas fa-building text-success"></i> Instansi Aktif
                     </h6>
+                    <span class="badge bg-success">{{ $instansi->count() }} instansi</span>
                 </div>
                 <div class="card-body">
                     @if($instansi->count() > 0)
-                        @foreach($instansi as $inst)
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <div>
-                                    <strong>{{ $inst->nama_instansi }}</strong>
-                                    <br><small class="text-muted">{{ $inst->apps_count }} aplikasi</small>
+                        <div class="row">
+                            @foreach($instansi as $inst)
+                                <div class="col-12 mb-3">
+                                    <div class="card border h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-start">
+                                                <div class="flex-grow-1">
+                                                    <h6 class="mb-1">{{ $inst->nama_instansi }}</h6>
+                                                    <p class="text-muted small mb-2">{{ $inst->apps_count }} aplikasi tersedia</p>
+                                                    <span class="badge bg-success">Aktif</span>
+                                                </div>
+                                                <div class="d-flex gap-2">
+                                                    <a href="{{ route('client.instansi.show', $inst->id) }}" class="btn btn-sm btn-outline-primary">
+                                                        <i class="fas fa-eye"></i> Selengkapnya
+                                                    </a>
+                                                    @if($hasPanelAccess && (auth()->user()->is_superadmin || auth()->user()->instansi_id == $inst->id))
+                                                        <a href="{{ route('panel.instansi.edit', $inst->id) }}" class="btn btn-sm btn-outline-warning">
+                                                            <i class="fas fa-cog"></i> Setting
+                                                        </a>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <span class="badge bg-success">Aktif</span>
-                            </div>
-                            @if(!$loop->last)
-                                <hr class="my-2">
-                            @endif
-                        @endforeach
+                            @endforeach
+                        </div>
                     @else
                         <p class="text-muted text-center">Belum ada instansi terdaftar.</p>
                     @endif
