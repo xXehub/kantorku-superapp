@@ -36,6 +36,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/client/instansi/{id}', [ClientController::class, 'showInstansi'])->name('client.instansi.show');
 });
 
+// Debug route (remove in production)
+Route::get('/debug', function () {
+    return view('debug');
+})->middleware(['auth', 'has.panel.access']);
+
 // Tier 2: "Panel" - only for users with non-default permissions
 Route::middleware(['auth', 'has.panel.access'])->prefix('panel')->name('panel.')->group(function () {
     // Main Panel Dashboard
