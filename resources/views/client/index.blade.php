@@ -11,7 +11,7 @@
                            Melalui satu pintu aplikasi ini, pengguna dapat menjelajahi, mengajukan, dan memantau layanan
                            dari dinas-dinas seperti Pendidikan, Kominfo, Kesehatan, hingga Perizinan.
                        </p>
-                       <a href="#" class="btn btn-outline-primary position-absolute"
+                       <a href="#" class="btn btn-primary position-absolute"
                            style="bottom: 1rem; right: 1rem; padding: 0.20rem 1.5rem; font-size: 0.75rem;">
                            <i class="ti ti-book me-1"></i> Panduan Pengguna
                        </a>

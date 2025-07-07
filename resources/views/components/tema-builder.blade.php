@@ -1,6 +1,6 @@
  <form class="offcanvas offcanvas-start offcanvas-narrow" tabindex="-1" id="offcanvasSettings">
      <div class="offcanvas-header">
-         <h2 class="offcanvas-title">Theme Builder</h2>
+         <h2 class="offcanvas-title">Pengaturan Tema</h2>
          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
      </div>
      <div class="offcanvas-body d-flex flex-column">

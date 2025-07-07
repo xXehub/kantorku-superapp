@@ -150,11 +150,25 @@
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown"
                     aria-label="Open user menu">
-                    <span class="avatar avatar-sm" style="background-image: url(./static/avatars/000m.jpg)">
-                    </span>
+                    @if (Auth::user()->avatar)
+                        <span class="avatar avatar-sm" style="background-image: url({{ Auth::user()->avatar }})">
+                        </span>
+                    @else
+                        <span class="avatar avatar-sm">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </span>
+                    @endif
                     <div class="d-none d-xl-block ps-2">
                         <div>{{ Auth::user()->name }}</div>
-                        <div class="mt-1 small text-secondary">Role</div>
+                        <div class="mt-1 small text-secondary">
+                            @if (Auth::user()->is_superadmin)
+                                Superadmin
+                            @elseif(Auth::user()->role)
+                                {{ Auth::user()->role->nama_role }}
+                            @else
+                                User
+                            @endif
+                        </div>
                     </div>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -196,36 +210,6 @@
                                     <span class="nav-link-title"> Beranda </span>
                                 </a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
-                                    data-bs-auto-close="outside" role="button" aria-expanded="false">
-                                    <span
-                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler.io/icons/icon/package -->
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-1">
-                                            <path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5" />
-                                            <path d="M12 12l8 -4.5" />
-                                            <path d="M12 12l0 9" />
-                                            <path d="M12 12l-8 -4.5" />
-                                            <path d="M16 5.25l-8 4.5" />
-                                        </svg></span>
-                                    <span class="nav-link-title"> Bantuan </span>
-                                </a>
-                                <div class="dropdown-menu">
-                                    <div class="dropdown-menu-columns">
-                                        <div class="dropdown-menu-column">
-                                            <a class="dropdown-item" href="./accordion.html">
-                                                Pertanyaan Umum
-                                            </a>
-                                            <a class="dropdown-item" href="./accordion.html">
-                                                User Guide
-                                            </a>
-
-                                        </div>
-                                    </div>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="./form-elements.html">
                                     <span
@@ -241,6 +225,46 @@
                                     <span class="nav-link-title"> Layanan </span>
                                 </a>
                             </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#navbar-base" data-bs-toggle="dropdown"
+                                    data-bs-auto-close="outside" role="button" aria-expanded="false">
+                                    <span
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler.io/icons/icon/package -->
+                                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            class="icon icon-1"
+                          >
+                            <path d="M12 12m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                            <path d="M15 15l3.35 3.35" />
+                            <path d="M9 15l-3.35 3.35" />
+                            <path d="M5.65 5.65l3.35 3.35" />
+                            <path d="M18.35 5.65l-3.35 3.35" /></svg
+                        ></span>
+                                    <span class="nav-link-title"> Bantuan </span>
+                                </a>
+                                <div class="dropdown-menu">
+                                    <div class="dropdown-menu-columns">
+                                        <div class="dropdown-menu-column">
+                                            <a class="dropdown-item" href="./accordion.html">
+                                                Pertanyaan Umum
+                                            </a>
+                                            <a class="dropdown-item" href="./accordion.html">
+                                                User Guide
+                                            </a>
+
+                                        </div>
+                                    </div>
+                            </li>
+
                         </ul>
                         <!-- END NAVBAR MENU -->
                     </div>
