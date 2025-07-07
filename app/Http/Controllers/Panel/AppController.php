@@ -20,7 +20,7 @@ class AppController extends Controller
     public function index()
     {
         $user = auth()->user();
-        
+
         if ($user->isSuperAdmin()) {
             // Super admin can see all apps
             $apps = MasterApp::with('instansi')->latest()->paginate(15);
@@ -45,7 +45,7 @@ class AppController extends Controller
     public function create()
     {
         $user = auth()->user();
-        
+
         if (!$user->isSuperAdmin() && !$user->isAdmin()) {
             abort(403, 'Access denied.');
         }
@@ -61,7 +61,7 @@ class AppController extends Controller
     public function store(Request $request)
     {
         $user = auth()->user();
-        
+
         if (!$user->isSuperAdmin() && !$user->isAdmin()) {
             abort(403, 'Access denied.');
         }
@@ -97,12 +97,12 @@ class AppController extends Controller
     public function show(MasterApp $app)
     {
         $user = auth()->user();
-        
+
         // Check access permissions
         if (!$user->isSuperAdmin() && !$user->isAdmin()) {
             abort(403, 'Access denied.');
         }
-        
+
         if ($user->isAdmin() && $app->instansi_id !== $user->instansi_id) {
             abort(403, 'Access denied.');
         }
@@ -116,12 +116,12 @@ class AppController extends Controller
     public function edit(MasterApp $app)
     {
         $user = auth()->user();
-        
+
         // Check access permissions
         if (!$user->isSuperAdmin() && !$user->isAdmin()) {
             abort(403, 'Access denied.');
         }
-        
+
         if ($user->isAdmin() && $app->instansi_id !== $user->instansi_id) {
             abort(403, 'Access denied.');
         }
@@ -137,12 +137,12 @@ class AppController extends Controller
     public function update(Request $request, MasterApp $app)
     {
         $user = auth()->user();
-        
+
         // Check access permissions
         if (!$user->isSuperAdmin() && !$user->isAdmin()) {
             abort(403, 'Access denied.');
         }
-        
+
         if ($user->isAdmin() && $app->instansi_id !== $user->instansi_id) {
             abort(403, 'Access denied.');
         }
@@ -178,12 +178,12 @@ class AppController extends Controller
     public function destroy(MasterApp $app)
     {
         $user = auth()->user();
-        
+
         // Check access permissions
         if (!$user->isSuperAdmin() && !$user->isAdmin()) {
             abort(403, 'Access denied.');
         }
-        
+
         if ($user->isAdmin() && $app->instansi_id !== $user->instansi_id) {
             abort(403, 'Access denied.');
         }
