@@ -3,7 +3,7 @@
            <div class="container-xl">
                <div class="row row-deck row-cards">
                    <!-- ENJUY -->
-                   <div class="card p-4 mb-4 rounded shadow-sm border">
+                   <div class="card p-12 mb-4 rounded shadow-sm border">
                        <h2 class="mb-2 fw-bold">Layanan SuperApp</h2>
                        <p class="mb-4 text-secondary" style="max-width: 700px;">
                            SuperApp adalah platform layanan digital terpadu yang dirancang untuk memudahkan masyarakat
@@ -16,9 +16,9 @@
                            <i class="ti ti-book me-1"></i> Panduan Pengguna
                        </a>
                    </div>
-                   <div class="d-flex justify-content-between flex-wrap align-items-center mb-3 gap-2">
+                   <div class="d-flex justify-content-between flex-wrap align-items-center mb-1 gap-2">
                        <!-- Filter buttons -->
-                       <div class="form-selectgroup d-flex flex-wrap gap-2">
+                       <div class="form-selectgroup d-flex flex-wrap">
                            <label class="form-selectgroup-item">
                                <input type="radio" name="icons" value="tampilkan semua"
                                    class="form-selectgroup-input" checked />
@@ -47,48 +47,52 @@
                        </div>
 
                        <!-- Search bar -->
-                       <div class="d-flex align-items-center" style="max-width: 250px;">
-                           <input type="text" class="form-control" placeholder="Cari …" />
-                           <a href="#" class="btn btn-2 btn-icon" aria-label="Button">
+                       <div class="input-icon mb-2">
+                           <input type="text" value="" class="form-control" placeholder="Search…" />
+                           <span class="input-icon-addon">
                                <!-- Download SVG icon from http://tabler.io/icons/icon/search -->
                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                   stroke-linejoin="round" class="icon icon-2">
+                                   stroke-linejoin="round" class="icon icon-1">
                                    <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
                                    <path d="M21 21l-6 -6" />
                                </svg>
-                           </a>
+                           </span>
                        </div>
                    </div>
                    <!-- BUAT LIST DINAS -->
                    @foreach ($instansi as $item)
-                   <div class="col-md-6 col-lg-3">
-                       <div class="card">
-                           <div class="card-body p-4 text-center">
-                               @if($item->logo_url)
-                                   <span class="avatar avatar-xl mb-3"
-                                       style="background-image: url({{ $item->logo_url }})">
-                                   </span>
-                               @else
-                                   <span class="avatar avatar-xl mb-3">
-                                       {{ strtoupper(substr($item->nama_instansi, 0, 1)) }}
-                                   </span>
-                               @endif
-                               <h3 class="m-0 mb-1"><a href="#">{{ $item->nama_instansi }}</a></h3>
-                               <div class="text-secondary">
-                                   {{ $item->deskripsi }}
+                       <div class="col-md-6 col-lg-3">
+                           <div class="card">
+                               <div class="card-body p-4 text-center">
+                                   @if ($item->logo_url)
+                                       <span class="avatar avatar-xl mb-3"
+                                           style="background-image: url({{ $item->logo_url }})">
+                                       </span>
+                                   @else
+                                       <span class="avatar avatar-xl mb-3">
+                                           {{ strtoupper(substr($item->nama_instansi, 0, 1)) }}
+                                       </span>
+                                   @endif
+                                   <h3 class="m-0 mb-1"><a href="#">{{ $item->nama_instansi }}</a></h3>
+                                   <div class="text-secondary">
+                                       {{ $item->deskripsi }}
+                                   </div>
+                               </div>
+                               <div class="d-flex">
+                                   <a href="{{ route('client.instansi.show', $item->id) }}"
+                                       class="card-btn">Selengkapnya</a>
                                </div>
                            </div>
-                           <div class="d-flex">
-                               <a href="{{ route('client.instansi.show', $item->id) }}" class="card-btn">Selengkapnya</a>
-                           </div>
                        </div>
-                   </div>
                    @endforeach
                    <!-- end buat list dinas -->
-                   <div class="card-footer d-flex align-items-center">
-                       <p class="m-0 text-secondary">Showing <span>{{ $instansi->firstItem() }}</span> to <span>{{ $instansi->lastItem() }}</span> of <span>{{ $instansi->total() }}</span>
-                           entries</p>
+                   <div class="d-flex justify-content-between flex-wrap align-items-center mb-1 gap-2">
+
+                       <p class="m-0 text-secondary">Showing <span>{{ $instansi->firstItem() }}</span> to
+                           <span>{{ $instansi->lastItem() }}</span> of <span>{{ $instansi->total() }}</span>
+                           entries
+                       </p>
                        <ul class="pagination m-0 ms-auto">
                            @if ($instansi->onFirstPage())
                                <li class="page-item disabled">
@@ -98,7 +102,7 @@
                                            stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                            <path d="M15 6l-6 6l6 6" />
                                        </svg>
-                                       prev
+                                       sebelumnya
                                    </a>
                                </li>
                            @else
@@ -109,23 +113,26 @@
                                            stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
                                            <path d="M15 6l-6 6l6 6" />
                                        </svg>
-                                       prev
+                                       sebelumnya
                                    </a>
                                </li>
                            @endif
 
                            @foreach ($instansi->getUrlRange(1, $instansi->lastPage()) as $page => $url)
                                @if ($page == $instansi->currentPage())
-                                   <li class="page-item active"><a class="page-link" href="#">{{ $page }}</a></li>
+                                   <li class="page-item active"><a class="page-link"
+                                           href="#">{{ $page }}</a>
+                                   </li>
                                @else
-                                   <li class="page-item"><a class="page-link" href="{{ $url }}">{{ $page }}</a></li>
+                                   <li class="page-item"><a class="page-link"
+                                           href="{{ $url }}">{{ $page }}</a></li>
                                @endif
                            @endforeach
 
                            @if ($instansi->hasMorePages())
                                <li class="page-item">
                                    <a class="page-link" href="{{ $instansi->nextPageUrl() }}">
-                                       next
+                                       selanjutnya
                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                            stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
@@ -136,7 +143,7 @@
                            @else
                                <li class="page-item disabled">
                                    <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
-                                       next
+                                       selanjutnya
                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                            stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
@@ -146,7 +153,10 @@
                                </li>
                            @endif
                        </ul>
+
                    </div>
+
+
 
 
                </div>
