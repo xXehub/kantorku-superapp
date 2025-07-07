@@ -176,8 +176,8 @@
                     <a href="./profile.html" class="dropdown-item">Profile</a>
                     <a href="#" class="dropdown-item">Feedback</a>
                     <div class="dropdown-divider"></div>
-                    <a href="./settings.html" class="dropdown-item">Pengaturan</a>
-                    <a href="#" class="dropdown-item" onclick="confirmLogout()">Keluar</a>
+                    <a href="./settings.html" class="dropdown-item">Settings</a>
+                    <a href="#" class="dropdown-item" onclick="confirmLogout()">Logout</a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                         @csrf
                     </form>
@@ -314,12 +314,8 @@
 <script>
     // Fungsi konfirmasi logout menggunakan modal alert
     function confirmLogout() {
-        console.log('confirmLogout() dipanggil');
-
         // Cek apakah modalAlert sudah tersedia
         if (typeof window.modalAlert !== 'undefined' && window.modalAlert) {
-            console.log('Modal alert tersedia, menampilkan modal konfirmasi');
-
             // Gunakan modal alert
             window.modalAlert.show({
                 type: 'warning',
@@ -327,73 +323,20 @@
                 message: 'Apakah Anda yakin ingin keluar dari sistem? Pastikan semua pekerjaan sudah disimpan.',
                 primaryButton: 'Ya, Logout',
                 secondaryButton: 'Batal',
-                onPrimary: function() {
-                    console.log('User memilih logout, mencoba submit form');
-
-                    // Cari form logout
-                    const logoutForm = document.getElementById('logout-form');
-                    if (logoutForm) {
-                        console.log('Form logout ditemukan, melakukan submit');
-                        logoutForm.submit();
-                    } else {
-                        console.error('Form logout tidak ditemukan!');
-                        // Fallback dengan redirect manual
-                        window.location.href = '{{ route('logout') }}';
-                    }
+                primaryAction: function() {
+                    // Submit form logout
+                    document.getElementById('logout-form').submit();
                 },
-                onSecondary: function() {
+                secondaryAction: function() {
+                    // Tidak perlu melakukan apa-apa, modal akan tertutup otomatis
                     console.log('Logout dibatalkan');
                 }
             });
         } else {
-            console.log('Modal alert tidak tersedia, menggunakan browser confirm');
-
             // Fallback ke browser confirm jika modal alert belum ready
             if (confirm('Apakah Anda yakin ingin keluar dari sistem?')) {
-                console.log('User konfirmasi logout via browser confirm');
-
-                const logoutForm = document.getElementById('logout-form');
-                if (logoutForm) {
-                    console.log('Form logout ditemukan, melakukan submit');
-                    logoutForm.submit();
-                } else {
-                    console.error('Form logout tidak ditemukan!');
-                    // Fallback dengan redirect manual
-                    window.location.href = '{{ route('logout') }}';
-                }
+                document.getElementById('logout-form').submit();
             }
-        }
-    }
-
-    // Debug: Cek apakah form logout ada saat halaman dimuat
-    document.addEventListener('DOMContentLoaded', function() {
-        const logoutForm = document.getElementById('logout-form');
-        if (logoutForm) {
-            console.log('Form logout berhasil dimuat:', logoutForm);
-            console.log('Action form:', logoutForm.action);
-        } else {
-            console.error('Form logout tidak ditemukan saat halaman dimuat!');
-        }
-    });
-
-    // Fungsi test logout langsung (untuk debugging)
-    function testDirectLogout() {
-        console.log('Test direct logout dipanggil');
-        const logoutForm = document.getElementById('logout-form');
-        if (logoutForm) {
-            console.log('Form ditemukan, melakukan submit langsung');
-            logoutForm.submit();
-        } else {
-            console.error('Form tidak ditemukan!');
-            alert('Form logout tidak ditemukan!');
-        }
-    }
-
-    // Fungsi logout dengan browser confirm sederhana
-    function simpleBrowserConfirmLogout() {
-        if (confirm('Yakin logout?')) {
-            console.log('User konfirmasi, submit form');
-            document.getElementById('logout-form').submit();
         }
     }
 </script>

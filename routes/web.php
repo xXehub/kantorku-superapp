@@ -8,6 +8,7 @@ use App\Http\Controllers\Panel\RoleController;
 use App\Http\Controllers\Panel\AppController as PanelAppController;
 use App\Http\Controllers\Panel\InstansiController;
 use App\Http\Controllers\Panel\PermissionController;
+use App\Http\Controllers\ModalAlertExampleController;
 
 // Include debug routes
 if (file_exists(__DIR__ . '/debug.php')) {
@@ -67,4 +68,19 @@ Route::middleware(['auth', 'has.panel.access'])->prefix('panel')->name('panel.')
 
     // Instansi Management
     Route::resource('instansi', InstansiController::class);
+});
+
+// Modal Alert Examples (untuk development/testing)
+Route::middleware(['auth'])->prefix('examples')->name('example.')->group(function () {
+    Route::get('/modal-alert', [ModalAlertExampleController::class, 'index'])->name('modal-alert');
+    Route::get('/modal-alert/success', [ModalAlertExampleController::class, 'success'])->name('success');
+    Route::get('/modal-alert/error', [ModalAlertExampleController::class, 'error'])->name('error');
+    Route::get('/modal-alert/warning', [ModalAlertExampleController::class, 'warning'])->name('warning');
+    Route::get('/modal-alert/info', [ModalAlertExampleController::class, 'info'])->name('info');
+    Route::get('/modal-alert/custom', [ModalAlertExampleController::class, 'confirmation'])->name('custom');
+    Route::get('/modal-alert/confirmation', [ModalAlertExampleController::class, 'confirmation'])->name('confirmation');
+    Route::post('/modal-alert/validate', [ModalAlertExampleController::class, 'submitForm'])->name('validate');
+    Route::post('/modal-alert/submit-form', [ModalAlertExampleController::class, 'submitForm'])->name('submit-form');
+    Route::post('/modal-alert/bulk-delete', [ModalAlertExampleController::class, 'bulkDelete'])->name('bulk-delete');
+    Route::post('/modal-alert/confirm-bulk-delete', [ModalAlertExampleController::class, 'confirmBulkDelete'])->name('confirm-bulk-delete');
 });

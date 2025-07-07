@@ -154,6 +154,9 @@
     <!-- Settings Modal -->
     <x-modal.settings />
 
+    <!-- Alert Modal -->
+    <x-modal-alert />
+
     <!-- JavaScript Libraries -->
 
     <!-- jQuery -->
@@ -191,6 +194,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/id.min.js"></script>
 
     <!-- Custom JavaScript -->
+    <script src="{{ asset('js/modal-alert.js') }}"></script>
+
+    <!-- Auto show modal from session -->
+    @if (session('modal_alert'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const alertData = @json(session('modal_alert'));
+
+                // Tunggu sampai modalAlert ready
+                function showSessionModal() {
+                    if (window.modalAlert) {
+                        window.modalAlert.show(alertData);
+                    } else {
+                        // Retry setelah 100ms jika belum ready
+                        setTimeout(showSessionModal, 100);
+                    }
+                }
+
+                showSessionModal();
+            });
+        </script>
+    @endif
 
     <!-- Page Specific Scripts -->
     @stack('scripts')

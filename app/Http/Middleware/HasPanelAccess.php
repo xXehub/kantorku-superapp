@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use App\Helpers\ModalAlert;
 
 class HasPanelAccess
 {
@@ -18,14 +19,19 @@ class HasPanelAccess
         if (!auth()->check()) {
             return redirect()->route('login');
         }
-        
+
         $user = auth()->user();
-        
+
         if (!$user->hasNonDefaultPermissions()) {
-            return redirect()->route('client')
-                ->with('error', 'Anda tidak memiliki akses ke panel manajemen.');
+            ModalAlert::error(
+                'Akses Ditolak',
+                'Anda tidak memiliki akses ke panel manajemen. Silakan hubungi administrator untuk mendapatkan izin akses.',
+                'Mengerti'
+            );
+
+            return redirect()->route('client');
         }
-        
+
         return $next($request);
     }
 }
