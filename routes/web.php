@@ -11,10 +11,12 @@ use App\Http\Controllers\Panel\PermissionController;
 use App\Http\Controllers\Panel\KategoriAppController;
 use App\Http\Controllers\ModalAlertExampleController;
 
-// Include debug routes
-if (file_exists(__DIR__ . '/debug.php')) {
-    include __DIR__ . '/debug.php';
-}
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+| Minimal web routes - most functionality is in API routes
+*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,34 +24,43 @@ Route::get('/', function () {
 
 Auth::routes();
 
-// Redirect old routes to new system
+// debug route untuk api testing doang (remove in production)
+Route::get('/debug-api', function () {
+    return view('debug-api');
+})->name('debug.api');
+
+// quick login (remove in production)
+Route::get('/dev-login', function () {
+    $user = App\Models\User::first();
+    if ($user) {
+        Auth::login($user);
+        return redirect('/debug-api')->with('success', 'Logged in as: ' . $user->name . '. Test API with token authentication.');
+    }
+    return redirect('/login')->with('error', 'No users found. Please register first.');
+})->name('dev.login');
+
+// Legacy redirects
 Route::get('/home', function () {
-    return redirect()->route('client');
+    return redirect('/debug-api');
 })->name('home');
 
 Route::get('/dashboard', function () {
-    return redirect()->route('client');
+    return redirect('/debug-api');
 })->name('dashboard');
 
 Route::get('/beranda', function () {
-    return redirect()->route('client');
+    return redirect('/debug-api');
 })->name('beranda');
 
-// NEW 2-TIER VIEW SYSTEM
-
-// Tier 1: "Client" - accessible by all authenticated users (default landing page)
+// Tier 1: "Client" - yang bisa diakses semua user yang ter auth (default landing page)
 Route::middleware(['auth'])->group(function () {
     Route::get('/beranda', [ClientController::class, 'index'])->name('client');
     Route::get('/beranda/aplikasi', [ClientController::class, 'aplikasi'])->name('client.aplikasi');
     Route::get('/beranda/instansi/{id}', [ClientController::class, 'showInstansi'])->name('client.instansi.show');
 });
 
-// Debug route (remove in production)
-Route::get('/debug', function () {
-    return view('debug');
-})->middleware(['auth', 'has.panel.access']);
-
-// Tier 2: "Panel" - only for users with non-default permissions
+// Tier 2: "Panel" - untuk user non-default permissions (WEB INTERFACE)
+// Note: API endpoints di /api/panel/* pake token auth
 Route::middleware(['auth', 'has.panel.access'])->prefix('panel')->name('panel.')->group(function () {
     // Main Panel Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -75,7 +86,7 @@ Route::middleware(['auth', 'has.panel.access'])->prefix('panel')->name('panel.')
     Route::resource('kategori', KategoriAppController::class);
 });
 
-// Modal Alert Examples (untuk development/testing)
+// Modal Alert Examples (for development/testing)
 Route::middleware(['auth'])->prefix('examples')->name('example.')->group(function () {
     Route::get('/modal-alert', [ModalAlertExampleController::class, 'index'])->name('modal-alert');
     Route::get('/modal-alert/success', [ModalAlertExampleController::class, 'success'])->name('success');
