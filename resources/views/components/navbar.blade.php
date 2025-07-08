@@ -570,7 +570,8 @@
 
         // Tunggu sampai modal alert tersedia dengan retry mechanism
         function tryShowModal(retries = 0) {
-            if (typeof window.modalAlert !== 'undefined' && window.modalAlert && typeof window.modalAlert.show === 'function') {
+            if (typeof window.modalAlert !== 'undefined' && window.modalAlert && typeof window.modalAlert.show ===
+                'function') {
                 console.log('Modal alert tersedia, menampilkan modal konfirmasi');
 
                 // Gunakan modal alert

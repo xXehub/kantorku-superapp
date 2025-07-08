@@ -267,7 +267,7 @@ class DashboardController extends Controller
         // Calculate percentage for progress bar based on the highest user count
         if ($topApps->count() > 0) {
             $maxUserCount = $topApps->first()->users_count;
-            
+
             $topApps->transform(function ($app) use ($maxUserCount) {
                 if ($maxUserCount > 0) {
                     $app->percentage = round(($app->users_count / $maxUserCount) * 100, 2);
