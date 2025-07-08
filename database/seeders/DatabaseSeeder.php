@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             PermissionSeeder::class,
             InstansiSeeder::class,
+            KategoriAppSeeder::class,
             UserSeeder::class,
             MasterAppSeeder::class,
         ]);

@@ -20,6 +20,7 @@ class MasterApp extends Model
         'is_active',
         'created_by',
         'instansi_id',
+        'kategori_app_id',
     ];
 
     protected $casts = [
@@ -85,5 +86,13 @@ class MasterApp extends Model
     public function instansi()
     {
         return $this->belongsTo(Instansi::class);
+    }
+
+    /**
+     * Get the category that this app belongs to
+     */
+    public function kategori()
+    {
+        return $this->belongsTo(KategoriApp::class, 'kategori_app_id');
     }
 }

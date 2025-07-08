@@ -8,6 +8,7 @@ use App\Http\Controllers\Panel\RoleController;
 use App\Http\Controllers\Panel\AppController as PanelAppController;
 use App\Http\Controllers\Panel\InstansiController;
 use App\Http\Controllers\Panel\PermissionController;
+use App\Http\Controllers\Panel\KategoriAppController;
 use App\Http\Controllers\ModalAlertExampleController;
 
 // Include debug routes
@@ -39,6 +40,7 @@ Route::get('/beranda', function () {
 // Tier 1: "Client" - accessible by all authenticated users (default landing page)
 Route::middleware(['auth'])->group(function () {
     Route::get('/client', [ClientController::class, 'index'])->name('client');
+    Route::get('/client/aplikasi', [ClientController::class, 'aplikasi'])->name('client.aplikasi');
     Route::get('/client/instansi/{id}', [ClientController::class, 'showInstansi'])->name('client.instansi.show');
 });
 
@@ -68,6 +70,9 @@ Route::middleware(['auth', 'has.panel.access'])->prefix('panel')->name('panel.')
 
     // Instansi Management
     Route::resource('instansi', InstansiController::class);
+    
+    // Kategori App Management
+    Route::resource('kategori', KategoriAppController::class);
 });
 
 // Modal Alert Examples (untuk development/testing)

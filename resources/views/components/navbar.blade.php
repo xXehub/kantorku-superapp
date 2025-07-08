@@ -206,7 +206,7 @@
                     <div class="col">
                         <!-- BEGIN NAVBAR MENU -->
                         <ul class="navbar-nav">
-                            <li class="nav-item {{ request()->routeIs('client*') ? 'active' : '' }}">
+                            <li class="nav-item {{ request()->routeIs('client') ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route('client') }}">
                                     <span
                                         class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler.io/icons/icon/home -->
@@ -221,19 +221,24 @@
                                     <span class="nav-link-title"> Beranda </span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="./form-elements.html">
+                            <li class="nav-item {{ request()->routeIs('client.aplikasi*') ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route('client.aplikasi') }}">
                                     <span
-                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler.io/icons/icon/checkbox -->
+                                        class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler.io/icons/icon/apps -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                             class="icon icon-1">
-                                            <path d="M9 11l3 3l8 -8" />
                                             <path
-                                                d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" />
+                                                d="M4 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                            <path
+                                                d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                            <path
+                                                d="M14 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                            <path d="M14 7l6 0" />
+                                            <path d="M17 4l0 6" />
                                         </svg></span>
-                                    <span class="nav-link-title"> Layanan </span>
+                                    <span class="nav-link-title"> Aplikasi </span>
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
