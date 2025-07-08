@@ -568,21 +568,47 @@
     function confirmLogout() {
         console.log('confirmLogout() dipanggil');
 
-        // Cek apakah modalAlert sudah tersedia
-        if (typeof window.modalAlert !== 'undefined' && window.modalAlert) {
-            console.log('Modal alert tersedia, menampilkan modal konfirmasi');
+        // Tunggu sampai modal alert tersedia dengan retry mechanism
+        function tryShowModal(retries = 0) {
+            if (typeof window.modalAlert !== 'undefined' && window.modalAlert && typeof window.modalAlert.show === 'function') {
+                console.log('Modal alert tersedia, menampilkan modal konfirmasi');
 
-            // Gunakan modal alert
-            window.modalAlert.show({
-                type: 'warning',
-                title: 'Konfirmasi Logout',
-                message: 'Apakah Anda yakin ingin keluar dari sistem? Pastikan semua pekerjaan sudah disimpan.',
-                primaryButton: 'Ya, Logout',
-                secondaryButton: 'Batal',
-                onPrimary: function() {
-                    console.log('User memilih logout, mencoba submit form');
+                // Gunakan modal alert
+                window.modalAlert.show({
+                    type: 'warning',
+                    title: 'Konfirmasi Logout',
+                    message: 'Apakah Anda yakin ingin keluar dari sistem? Pastikan semua pekerjaan sudah disimpan.',
+                    primaryButton: 'Ya, Logout',
+                    secondaryButton: 'Batal',
+                    onPrimary: function() {
+                        console.log('User memilih logout, mencoba submit form');
 
-                    // Cari form logout
+                        // Cari form logout
+                        const logoutForm = document.getElementById('logout-form');
+                        if (logoutForm) {
+                            console.log('Form logout ditemukan, melakukan submit');
+                            logoutForm.submit();
+                        } else {
+                            console.error('Form logout tidak ditemukan!');
+                            // Fallback dengan redirect manual
+                            window.location.href = '{{ route('logout') }}';
+                        }
+                    },
+                    onSecondary: function() {
+                        console.log('Logout dibatalkan');
+                    }
+                });
+            } else if (retries < 5) {
+                console.log(`Modal alert belum siap, retry ${retries + 1}/5`);
+                // Retry setelah delay singkat
+                setTimeout(() => tryShowModal(retries + 1), 200);
+            } else {
+                console.log('Modal alert tidak tersedia setelah 5 kali retry, menggunakan browser confirm');
+
+                // Fallback ke browser confirm jika modal alert tidak tersedia
+                if (confirm('Apakah Anda yakin ingin keluar dari sistem?')) {
+                    console.log('User konfirmasi logout via browser confirm');
+
                     const logoutForm = document.getElementById('logout-form');
                     if (logoutForm) {
                         console.log('Form logout ditemukan, melakukan submit');
@@ -592,29 +618,12 @@
                         // Fallback dengan redirect manual
                         window.location.href = '{{ route('logout') }}';
                     }
-                },
-                onSecondary: function() {
-                    console.log('Logout dibatalkan');
-                }
-            });
-        } else {
-            console.log('Modal alert tidak tersedia, menggunakan browser confirm');
-
-            // Fallback ke browser confirm jika modal alert belum ready
-            if (confirm('Apakah Anda yakin ingin keluar dari sistem?')) {
-                console.log('User konfirmasi logout via browser confirm');
-
-                const logoutForm = document.getElementById('logout-form');
-                if (logoutForm) {
-                    console.log('Form logout ditemukan, melakukan submit');
-                    logoutForm.submit();
-                } else {
-                    console.error('Form logout tidak ditemukan!');
-                    // Fallback dengan redirect manual
-                    window.location.href = '{{ route('logout') }}';
                 }
             }
         }
+
+        // Mulai proses
+        tryShowModal();
     }
 
     // Debug: Cek apakah form logout ada saat halaman dimuat
@@ -626,6 +635,15 @@
         } else {
             console.error('Form logout tidak ditemukan saat halaman dimuat!');
         }
+
+        // Debug: Cek status modal alert
+        setTimeout(() => {
+            if (typeof window.modalAlert !== 'undefined' && window.modalAlert) {
+                console.log('Modal alert berhasil dimuat:', window.modalAlert);
+            } else {
+                console.warn('Modal alert belum tersedia setelah 1 detik');
+            }
+        }, 1000);
     });
 
     // Fungsi test logout langsung (untuk debugging)

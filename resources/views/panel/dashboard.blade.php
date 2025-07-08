@@ -58,7 +58,7 @@
                                         </svg>
                                     </span>
                                     <div class="h1 m-0 ms-3 d-flex align-items-center">
-                                        249
+                                        {{ $stats['total_users'] ?? ($stats['instansi_users'] ?? 0) }}
                                         <div class="ms-2 text-success d-flex align-items-center"
                                             style="font-size: 15px;">
                                             7%
@@ -122,7 +122,7 @@
                                         </svg>
                                     </span>
                                     <div class="h1 m-0 ms-3 d-flex align-items-center">
-                                        249
+                                        {{ $stats['total_apps'] ?? ($stats['instansi_apps'] ?? 0) }}
                                         <div class="ms-2 text-success d-flex align-items-center"
                                             style="font-size: 15px;">
                                             7%
@@ -185,7 +185,7 @@
                                         </svg>
                                     </span>
                                     <div class="h1 m-0 ms-3 d-flex align-items-center">
-                                        249
+                                        {{ $stats['total_instansi'] ?? 1 }}
                                         <div class="ms-2 text-success d-flex align-items-center"
                                             style="font-size: 15px;">
                                             7%
@@ -250,7 +250,7 @@
                                         </svg>
                                     </span>
                                     <div class="h1 m-0 ms-3 d-flex align-items-center">
-                                        249
+                                        {{ $stats['total_roles'] ?? 0 }}
                                         <div class="ms-2 text-success d-flex align-items-center"
                                             style="font-size: 15px;">
                                             7%
@@ -282,262 +282,108 @@
                     {{-- instansi informasi --}}
                     <div class="col-lg-8">
                         <div class="card">
-                            <div class="table-responsive">
+                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                                 <table class="table table-vcenter card-table">
-                                    <thead>
+                                    <thead class="sticky-top bg-white">
                                         <tr>
                                             <th>Nama Instansi</th>
                                             <th>User</th>
-                                            <th>APlikasi</th>
+                                            <th>Aplikasi</th>
                                             <th>Status</th>
                                             <th class="w-1"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Dinas Komunikasi dan Informatika</td>
-                                            <td class="text-secondary">100</td>
-                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
-                                            </td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Active</span>
-                                            </td>
-                                            <td>
-                                                <a href="#">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dinas Kebudayaan dan Pariwisata</td>
-                                            <td class="text-secondary">100</td>
-                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
-                                            </td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Active</span>
-                                            </td>
-                                            <td>
-                                                <a href="#">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dinas Lingkungan Hidup</td>
-                                            <td class="text-secondary">100</td>
-                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
-                                            </td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-danger-lt">Inactive</span>
-                                            </td>
-                                            <td>
-                                                <a href="#">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dinas Perhubungan</td>
-                                            <td class="text-secondary">100</td>
-                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
-                                            </td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Active</span>
-                                            </td>
-                                            <td>
-                                                <a href="#">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dinas Pendidikan</td>
-                                            <td class="text-secondary">100</td>
-                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
-                                            </td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Active</span>
-                                            </td>
-                                            <td>
-                                                <a href="#">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dinas Sosial</td>
-                                            <td class="text-secondary">100</td>
-                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
-                                            </td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-danger-lt">Inactive</span>
-                                            </td>
-                                            <td>
-                                                <a href="#">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Dinas Perikanan</td>
-                                            <td class="text-secondary">100</td>
-                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
-                                            </td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-success-lt">Active</span>
-                                            </td>
-                                            <td>
-                                                <a href="#">Edit</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Polisi Pamong Praja</td>
-                                            <td class="text-secondary">100</td>
-                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
-                                            </td>
-                                            <td class="sort-status">
-                                                <span class="badge bg-danger-lt">Inactive</span>
-                                            </td>
-                                            <td>
-                                                <a href="#">Edit</a>
-                                            </td>
-                                        </tr>
+                                        @forelse($instansiData as $instansi)
+                                            <tr>
+                                                <td>{{ $instansi->nama_instansi }}</td>
+                                                <td class="text-secondary">{{ $instansi->users_count }}</td>
+                                                <td class="text-secondary">
+                                                    <a href="#"
+                                                        class="text-reset">{{ $instansi->apps_count }}</a>
+                                                </td>
+                                                <td class="sort-status">
+                                                    <span
+                                                        class="badge {{ $instansi->is_active ? 'bg-success-lt' : 'bg-danger-lt' }}">
+                                                        {{ $instansi->is_active ? 'Aktif' : 'Nonaktif' }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    @if (auth()->user()->isSuperAdmin() || auth()->user()->hasPermission('instansi.edit'))
+                                                        <a
+                                                            href="{{ route('panel.instansi.edit', $instansi->id) }}">Edit</a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted">Tidak ada data
+                                                    instansi</td>
+                                            </tr>
+                                        @endforelse
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
 
-                    {{-- aplikasi teratas --}}
+
+                    {{-- codeku saat ini --}}
                     <div class="col-lg-4">
                         <div class="card">
                             <div class="card-body">
                                 <h3 class="card-title">Aplikasi Teratas</h3>
-                                <table class="table table-sm table-borderless">
-                                    <thead>
+                                <div style="max-height: 400px; overflow-y: auto;">
+
+                                    {{--  
+                                    <table class="table table-vcenter card-table">
+                                    <thead class="sticky-top bg-white">
                                         <tr>
+                                            <th>Nama Instansi</th>
+                                            <th>User</th>
                                             <th>Aplikasi</th>
-                                            <th class="text-end">Users</th>
+                                            <th>Status</th>
+                                            <th class="w-1"></th>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div class="progressbg">
-                                                    <div class="progress progress-3 progressbg-progress">
-                                                        <div class="progress-bar bg-primary-lt" style="width: 82.54%"
-                                                            role="progressbar" aria-valuenow="82.54"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            aria-label="82.54% Complete">
-                                                            <span class="visually-hidden">82.54% Complete</span>
+                                    </thead>--}}
+                                    <table class="table table-sm table-borderless">
+                                        <thead>
+                                            <tr>
+                                                <th>Aplikasi</th>
+                                                <th class="text-end">Users</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($topApps as $app)
+                                                <tr>
+                                                    <td>
+                                                        <div class="progressbg">
+                                                            <div class="progress progress-3 progressbg-progress">
+                                                                <div class="progress-bar bg-primary-lt"
+                                                                    style="width: {{ $app->percentage ?? 0 }}%"
+                                                                    role="progressbar"
+                                                                    aria-valuenow="{{ $app->percentage ?? 0 }}"
+                                                                    aria-valuemin="0" aria-valuemax="100"
+                                                                    aria-label="{{ $app->percentage ?? 0 }}% Complete">
+                                                                    <span
+                                                                        class="visually-hidden">{{ $app->percentage ?? 0 }}%
+                                                                        Complete</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="progressbg-text">{{ $app->nama_app }}</div>
                                                         </div>
-                                                    </div>
-                                                    <div class="progressbg-text">e-Surat</div>
-                                                </div>
-                                            </td>
-                                            <td class="w-1 fw-bold text-end">4896</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="progressbg">
-                                                    <div class="progress progress-3 progressbg-progress">
-                                                        <div class="progress-bar bg-primary-lt" style="width: 76.29%"
-                                                            role="progressbar" aria-valuenow="76.29"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            aria-label="76.29% Complete">
-                                                            <span class="visually-hidden">76.29% Complete</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progressbg-text">WargaKu</div>
-                                                </div>
-                                            </td>
-                                            <td class="w-1 fw-bold text-end">3652</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="progressbg">
-                                                    <div class="progress progress-3 progressbg-progress">
-                                                        <div class="progress-bar bg-primary-lt" style="width: 72.65%"
-                                                            role="progressbar" aria-valuenow="72.65"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            aria-label="72.65% Complete">
-                                                            <span class="visually-hidden">72.65% Complete</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progressbg-text">e-Health</div>
-                                                </div>
-                                            </td>
-                                            <td class="w-1 fw-bold text-end">3256</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="progressbg">
-                                                    <div class="progress progress-3 progressbg-progress">
-                                                        <div class="progress-bar bg-primary-lt" style="width: 44.89%"
-                                                            role="progressbar" aria-valuenow="44.89"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            aria-label="44.89% Complete">
-                                                            <span class="visually-hidden">44.89% Complete</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progressbg-text">Mal Pelayanan Publik</div>
-                                                </div>
-                                            </td>
-                                            <td class="w-1 fw-bold text-end">986</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="progressbg">
-                                                    <div class="progress progress-3 progressbg-progress">
-                                                        <div class="progress-bar bg-primary-lt" style="width: 41.12%"
-                                                            role="progressbar" aria-valuenow="41.12"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            aria-label="41.12% Complete">
-                                                            <span class="visually-hidden">41.12% Complete</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progressbg-text">SIAGUS</div>
-                                                </div>
-                                            </td>
-                                            <td class="w-1 fw-bold text-end">912</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="progressbg">
-                                                    <div class="progress progress-3 progressbg-progress">
-                                                        <div class="progress-bar bg-primary-lt" style="width: 32.65%"
-                                                            role="progressbar" aria-valuenow="32.65"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            aria-label="32.65% Complete">
-                                                            <span class="visually-hidden">32.65% Complete</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progressbg-text">Satu Data</div>
-                                                </div>
-                                            </td>
-                                            <td class="w-1 fw-bold text-end">855</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="progressbg">
-                                                    <div class="progress progress-3 progressbg-progress">
-                                                        <div class="progress-bar bg-primary-lt" style="width: 16.22%"
-                                                            role="progressbar" aria-valuenow="16.22"
-                                                            aria-valuemin="0" aria-valuemax="100"
-                                                            aria-label="16.22% Complete">
-                                                            <span class="visually-hidden">16.22% Complete</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progressbg-text">e-Parking</div>
-                                                </div>
-                                            </td>
-                                            <td class="w-1 fw-bold text-end">764</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="progressbg">
-                                                    <div class="progress progress-3 progressbg-progress">
-                                                        <div class="progress-bar bg-primary-lt" style="width: 8.69%"
-                                                            role="progressbar" aria-valuenow="8.69" aria-valuemin="0"
-                                                            aria-valuemax="100" aria-label="8.69% Complete">
-                                                            <span class="visually-hidden">8.69% Complete</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="progressbg-text">lh.surabaya.go.id</div>
-                                                </div>
-                                            </td>
-                                            <td class="w-1 fw-bold text-end">686</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                                                    </td>
+                                                    <td class="w-1 fw-bold text-end">{{ $app->users_count }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="2" class="text-center text-muted">Tidak ada data
+                                                        aplikasi</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
