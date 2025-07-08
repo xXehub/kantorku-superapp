@@ -282,25 +282,60 @@
                                             <span class="nav-link-title"> Instansi </span>
                                         </a>
                                     </li>
-                                    <li class="nav-item {{ request()->routeIs('panel.roles*') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('panel.roles.index') }}">
+                                    <li
+                                        class="nav-item dropdown {{ request()->routeIs('panel.roles*') || request()->routeIs('panel.permissions*') ? 'active' : '' }}">
+                                        <a class="nav-link dropdown-toggle" href="#navbar-roles"
+                                            data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button"
+                                            aria-expanded="false">
                                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                     viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                     stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                                                     class="icon icon-1">
-                                                    <path d="M12 6l0 .01" />
-                                                    <path d="M12 18l0 .01" />
-                                                    <path d="M6 12l0 .01" />
-                                                    <path d="M18 12l0 .01" />
-                                                    <path d="M7.5 7.5l0 .01" />
-                                                    <path d="M16.5 16.5l0 .01" />
-                                                    <path d="M7.5 16.5l0 .01" />
-                                                    <path d="M16.5 7.5l0 .01" />
+                                                    <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                                                    <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                                    <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
                                                 </svg>
                                             </span>
-                                            <span class="nav-link-title"> Roles </span>
+                                            <span class="nav-link-title"> Akses & Peran </span>
                                         </a>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item {{ request()->routeIs('panel.roles*') ? 'active' : '' }}"
+                                                href="{{ route('panel.roles.index') }}">
+                                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" class="icon icon-1">
+                                                        <path d="M12 6l0 .01" />
+                                                        <path d="M12 18l0 .01" />
+                                                        <path d="M6 12l0 .01" />
+                                                        <path d="M18 12l0 .01" />
+                                                        <path d="M7.5 7.5l0 .01" />
+                                                        <path d="M16.5 16.5l0 .01" />
+                                                        <path d="M7.5 16.5l0 .01" />
+                                                        <path d="M16.5 7.5l0 .01" />
+                                                    </svg>
+                                                </span>
+                                                Manajemen Role
+                                            </a>
+                                            <a class="dropdown-item {{ request()->routeIs('panel.permissions*') ? 'active' : '' }}"
+                                                href="{{ route('panel.permissions.index') }}">
+                                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                        height="24" viewBox="0 0 24 24" fill="none"
+                                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                                        stroke-linejoin="round" class="icon icon-1">
+                                                        <path
+                                                            d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z" />
+                                                        <path d="M11 4a2 2 0 0 1 2 0v4a2 2 0 0 1 -2 0v-4z" />
+                                                        <path d="M12 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                                    </svg>
+                                                </span>
+                                                Manajemen Permission
+                                            </a>
+                                        </div>
                                     </li>
                                     <li class="nav-item {{ request()->routeIs('panel.kategori*') ? 'active' : '' }}">
                                         <a class="nav-link" href="{{ route('panel.kategori.index') }}">
@@ -392,26 +427,67 @@
                                         </li>
                                     @endif
 
-                                    @if (auth()->user()->hasPermission('roles.view'))
-                                        <li class="nav-item {{ request()->routeIs('panel.roles*') ? 'active' : '' }}">
-                                            <a class="nav-link" href="{{ route('panel.roles.index') }}">
+                                    @if (auth()->user()->hasPermission('roles.view') || auth()->user()->hasPermission('permissions.view'))
+                                        <li
+                                            class="nav-item dropdown {{ request()->routeIs('panel.roles*') || request()->routeIs('panel.permissions*') ? 'active' : '' }}">
+                                            <a class="nav-link dropdown-toggle" href="#navbar-roles"
+                                                data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button"
+                                                aria-expanded="false">
                                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                                                     <svg xmlns="http://www.w3.org/2000/svg" width="24"
                                                         height="24" viewBox="0 0 24 24" fill="none"
                                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
                                                         stroke-linejoin="round" class="icon icon-1">
-                                                        <path d="M12 6l0 .01" />
-                                                        <path d="M12 18l0 .01" />
-                                                        <path d="M6 12l0 .01" />
-                                                        <path d="M18 12l0 .01" />
-                                                        <path d="M7.5 7.5l0 .01" />
-                                                        <path d="M16.5 16.5l0 .01" />
-                                                        <path d="M7.5 16.5l0 .01" />
-                                                        <path d="M16.5 7.5l0 .01" />
+                                                        <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                                                        <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                                        <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
                                                     </svg>
                                                 </span>
-                                                <span class="nav-link-title"> Roles </span>
+                                                <span class="nav-link-title"> Akses & Peran </span>
                                             </a>
+                                            <div class="dropdown-menu">
+                                                @if (auth()->user()->hasPermission('roles.view'))
+                                                    <a class="dropdown-item {{ request()->routeIs('panel.roles*') ? 'active' : '' }}"
+                                                        href="{{ route('panel.roles.index') }}">
+                                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="icon icon-1">
+                                                                <path d="M12 6l0 .01" />
+                                                                <path d="M12 18l0 .01" />
+                                                                <path d="M6 12l0 .01" />
+                                                                <path d="M18 12l0 .01" />
+                                                                <path d="M7.5 7.5l0 .01" />
+                                                                <path d="M16.5 16.5l0 .01" />
+                                                                <path d="M7.5 16.5l0 .01" />
+                                                                <path d="M16.5 7.5l0 .01" />
+                                                            </svg>
+                                                        </span>
+                                                        Manajemen Role
+                                                    </a>
+                                                @endif
+                                                @if (auth()->user()->hasPermission('permissions.view'))
+                                                    <a class="dropdown-item {{ request()->routeIs('panel.permissions*') ? 'active' : '' }}"
+                                                        href="{{ route('panel.permissions.index') }}">
+                                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                height="24" viewBox="0 0 24 24" fill="none"
+                                                                stroke="currentColor" stroke-width="2"
+                                                                stroke-linecap="round" stroke-linejoin="round"
+                                                                class="icon icon-1">
+                                                                <path
+                                                                    d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6z" />
+                                                                <path d="M11 4a2 2 0 0 1 2 0v4a2 2 0 0 1 -2 0v-4z" />
+                                                                <path d="M12 7m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />
+                                                            </svg>
+                                                        </span>
+                                                        Manajemen Permission
+                                                    </a>
+                                                @endif
+                                            </div>
                                         </li>
                                     @endif
                                 @endif
