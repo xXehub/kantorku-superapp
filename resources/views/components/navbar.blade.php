@@ -435,6 +435,8 @@
                             @endif
                             @if (!request()->routeIs('panel.*'))
                                 {{-- Only show Aplikasi menu in client view --}}
+
+                                {{-- iki gawe client view --}}
                                 <li class="nav-item {{ request()->routeIs('client.aplikasi*') ? 'active' : '' }}">
                                     <a class="nav-link" href="{{ route('client.aplikasi') }}">
                                         <span
@@ -452,7 +454,7 @@
                                                 <path d="M14 7l6 0" />
                                                 <path d="M17 4l0 6" />
                                             </svg></span>
-                                        <span class="nav-link-title"> Aplikasi </span>
+                                        <span class="nav-link-title"> Layanan Aplikasi </span>
                                     </a>
                                 </li>
                             @endif
