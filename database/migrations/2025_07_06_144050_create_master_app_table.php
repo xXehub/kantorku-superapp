@@ -21,6 +21,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->foreignId('instansi_id')->constrained('instansi')->onDelete('cascade');
+            $table->foreignId('kategori_app_id')->nullable()->constrained('kategori_app')->onDelete('set null');
             $table->timestamps();
         });
     }

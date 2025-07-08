@@ -9,23 +9,33 @@
                             <div class="row align-items-center">
                                 <div class="col">
                                     <h2 class="card-title">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-apps me-2">
-                                            <path d="M4 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
-                                            <path d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
-                                            <path d="M14 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icon-tabler-apps me-2">
+                                            <path
+                                                d="M4 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                            <path
+                                                d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                            <path
+                                                d="M14 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
                                             <path d="M14 7l6 0" />
                                             <path d="M17 4l0 6" />
                                         </svg>
                                         Semua Aplikasi
                                     </h2>
                                     <p class="text-secondary mb-0">
-                                        Jelajahi semua aplikasi dan layanan digital yang tersedia dari berbagai instansi pemerintah Kota Surabaya.
+                                        Jelajahi semua aplikasi dan layanan digital yang tersedia dari berbagai instansi
+                                        pemerintah Kota Surabaya.
                                     </p>
                                 </div>
                                 <div class="col-auto">
                                     <div class="d-flex gap-2">
                                         <a href="{{ route('client') }}" class="btn btn-outline-primary">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icon-tabler-home me-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icon-tabler-home me-2">
                                                 <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
                                                 <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
                                                 <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
@@ -39,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="row row-deck row-cards">
                 <!-- Filter and Search Section -->
                 <div class="d-flex justify-content-between flex-wrap align-items-center mb-3 gap-2">
@@ -52,22 +62,25 @@
                             <span class="form-selectgroup-label">Tampilkan Semua</span>
                         </label>
                         @foreach ($categories as $kategori)
-                            <label class="form-selectgroup-item">
-                                <input type="radio" name="kategori-filter" value="{{ $kategori->slug }}"
-                                    class="form-selectgroup-input kategori-filter"
-                                    {{ request('kategori') === $kategori->slug ? 'checked' : '' }} />
-                                <span class="form-selectgroup-label">
-                                    @if ($kategori->icon)
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round"
-                                            class="icon icon-tabler icon-tabler-{{ $kategori->icon }} me-1">
-                                        </svg>
-                                    @endif
-                                    {{ $kategori->nama_kategori }}
-                                </span>
-                            </label>
-                        @endforeach
+    <label class="form-selectgroup-item">
+        <input type="radio" name="kategori-filter" value="{{ $kategori->slug }}"
+            class="form-selectgroup-input kategori-filter"
+            {{ request('kategori') === $kategori->slug ? 'checked' : '' }} />
+        <span class="form-selectgroup-label">
+            @if ($kategori->icon)
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icon-tabler-{{ $kategori->icon }} me-1">
+                    <!-- You should include the actual SVG path here -->
+                </svg>
+                {{ $kategori->nama_kategori }}
+            @else
+                {{ $kategori->nama_kategori }}
+            @endif
+        </span>
+    </label>
+@endforeach
                     </div>
 
                     <!-- Search bar -->
@@ -99,16 +112,16 @@
                                 @endif
                                 <h3 class="m-0 mb-1"><a href="#">{{ $app->nama_app }}</a></h3>
                                 <div class="text-secondary mb-2">{{ $app->deskripsi_app }}</div>
-                                
+
                                 <!-- Show instansi info -->
-                                @if($app->instansi)
+                                @if ($app->instansi)
                                     <div class="mb-2">
                                         <span class="badge bg-azure text-azure-fg">
                                             {{ $app->instansi->nama_instansi }}
                                         </span>
                                     </div>
                                 @endif
-                                
+
                                 <!-- Show category -->
                                 @if ($app->kategori)
                                     <span class="badge"

@@ -21,6 +21,7 @@ class MasterAppSeeder extends Seeder
                 'deskripsi_app' => 'Sistem Informasi Akademik',
                 'url_app' => 'https://siakad.disdik.surabaya.go.id',
                 'kode_instansi' => 'DISDIK',
+                'kategori_app_id' => 5,
             ],
             [
                 'kode_app' => 'ELEARN',
@@ -28,6 +29,7 @@ class MasterAppSeeder extends Seeder
                 'deskripsi_app' => 'Platform pembelajaran online',
                 'url_app' => 'https://elearning.disdik.surabaya.go.id',
                 'kode_instansi' => 'DISDIK',
+                'kategori_app_id' => 5,
             ],
             // Aplikasi Dinas Kesehatan
             [
@@ -36,6 +38,7 @@ class MasterAppSeeder extends Seeder
                 'deskripsi_app' => 'Sistem Informasi Manajemen Rumah Sakit',
                 'url_app' => 'https://simrs.dinkes.surabaya.go.id',
                 'kode_instansi' => 'DINKES',
+                'kategori_app_id' => 4,
             ],
             [
                 'kode_app' => 'EHR',
@@ -43,6 +46,7 @@ class MasterAppSeeder extends Seeder
                 'deskripsi_app' => 'Sistem rekam medis elektronik',
                 'url_app' => 'https://ehr.dinkes.surabaya.go.id',
                 'kode_instansi' => 'DINKES',
+                'kategori_app_id' => 1,
             ],
             // Aplikasi Dinas Sosial
             [
@@ -51,6 +55,7 @@ class MasterAppSeeder extends Seeder
                 'deskripsi_app' => 'Sistem Informasi Kesejahteraan Sosial',
                 'url_app' => 'https://siks.dinsos.surabaya.go.id',
                 'kode_instansi' => 'DINSOS',
+                'kategori_app_id' => 3,
             ],
             // Aplikasi DPU
             [
@@ -59,6 +64,7 @@ class MasterAppSeeder extends Seeder
                 'deskripsi_app' => 'Sistem Informasi Kepegawaian',
                 'url_app' => 'https://simpeg.dpu.surabaya.go.id',
                 'kode_instansi' => 'DPU',
+                'kategori_app_id' => 2,
             ],
             [
                 'kode_app' => 'INFRA',
@@ -66,6 +72,7 @@ class MasterAppSeeder extends Seeder
                 'deskripsi_app' => 'Sistem monitoring infrastruktur',
                 'url_app' => 'https://monitoring.dpu.surabaya.go.id',
                 'kode_instansi' => 'DPU',
+                'kategori_app_id' => 1,
             ],
             // Aplikasi Setda
             [
@@ -74,13 +81,14 @@ class MasterAppSeeder extends Seeder
                 'deskripsi_app' => 'Sistem administrasi perkantoran',
                 'url_app' => 'https://eoffice.setda.surabaya.go.id',
                 'kode_instansi' => 'SETDA',
+                'kategori_app_id' => 1,
             ],
         ];
 
         foreach ($apps as $appData) {
             // Cari instansi berdasarkan kode
             $instansi = Instansi::where('kode_instansi', $appData['kode_instansi'])->first();
-            
+
             if ($instansi) {
                 MasterApp::firstOrCreate(
                     ['kode_app' => $appData['kode_app']],
@@ -93,6 +101,7 @@ class MasterAppSeeder extends Seeder
                         'is_active' => true,
                         'created_by' => 1, // Superadmin
                         'instansi_id' => $instansi->id,
+                        'kategori_app_id' => $appData['kategori_app_id'],
                     ]
                 );
             }
