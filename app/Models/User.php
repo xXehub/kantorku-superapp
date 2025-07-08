@@ -223,4 +223,20 @@ class User extends Authenticatable
     {
         return $this->hasRole('User');
     }
+
+    /**
+     * Check if user can manage specific app (show settings button)
+     */
+    public function canManageApp($appId)
+    {
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        if ($this->isAdmin() && $this->app_id == $appId) {
+            return true;
+        }
+
+        return false;
+    }
 }
