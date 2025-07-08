@@ -259,6 +259,75 @@
             '">
            <path d="M8.56 3.69a9 9 0 0 0 -2.92 1.95" /><path d="M3.69 8.56a9 9 0 0 0 -.69 3.44" /><path d="M3.69 15.44a9 9 0 0 0 1.95 2.92" /><path d="M8.56 20.31a9 9 0 0 0 3.44 .69" /><path d="M15.44 20.31a9 9 0 0 0 2.92 -1.95" /><path d="M20.31 15.44a9 9 0 0 0 .69 -3.44" /><path d="M20.31 8.56a9 9 0 0 0 -1.95 -2.92" /><path d="M15.44 3.69a9 9 0 0 0 -3.44 -.69" /><path d="M9 12l2 2l4 -4" />
         </svg>',
+
+        // plus
+        'plus' =>
+            '<svg xmlns="http://www.w3.org/2000/svg" width="' .
+            $size .
+            '" height="' .
+            $size .
+            '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' .
+            $class .
+            '">
+            <path d="M12 5l0 14" />
+            <path d="M5 12l14 0" />
+        </svg>',
+
+        // edit
+        'edit' =>
+            '<svg xmlns="http://www.w3.org/2000/svg" width="' .
+            $size .
+            '" height="' .
+            $size .
+            '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' .
+            $class .
+            '">
+            <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" />
+            <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" />
+            <path d="M16 5l3 3" />
+        </svg>',
+
+        // eye
+        'eye' =>
+            '<svg xmlns="http://www.w3.org/2000/svg" width="' .
+            $size .
+            '" height="' .
+            $size .
+            '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' .
+            $class .
+            '">
+            <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+            <path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6" />
+        </svg>',
+
+        // check
+        'check' =>
+            '<svg xmlns="http://www.w3.org/2000/svg" width="' .
+            $size .
+            '" height="' .
+            $size .
+            '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' .
+            $class .
+            '">
+            <path d="M5 12l5 5l10 -10" />
+        </svg>',
+
+        // list
+        'list' =>
+            '<svg xmlns="http://www.w3.org/2000/svg" width="' .
+            $size .
+            '" height="' .
+            $size .
+            '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="' .
+            $class .
+            '">
+            <path d="M9 6l11 0" />
+            <path d="M9 12l11 0" />
+            <path d="M9 18l11 0" />
+            <path d="M5 6l0 .01" />
+            <path d="M5 12l0 .01" />
+            <path d="M5 18l0 .01" />
+        </svg>',
     ];
 @endphp
 
