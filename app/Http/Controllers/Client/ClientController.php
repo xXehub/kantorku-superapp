@@ -7,6 +7,7 @@ use App\Models\MasterApp;
 use App\Models\Instansi;
 use Illuminate\Http\Request;
 
+
 class ClientController extends Controller
 {
     public function __construct()
@@ -61,15 +62,18 @@ class ClientController extends Controller
         $user = auth()->user();
         
         $instansi = Instansi::where('is_active', true)
-            ->with(['apps' => function($query) {
-                $query->where('is_active', true)->orderBy('nama_app');
-            }])
             ->findOrFail($id);
+            
+        // Get paginated apps for this instansi
+        $apps = MasterApp::where('is_active', true)
+            ->where('instansi_id', $instansi->id)
+            ->orderBy('nama_app')
+            ->paginate(8);
             
         // Check if user has management access to this instansi
         $hasManagementAccess = $user->hasNonDefaultPermissions() && 
                               ($user->is_superadmin || $user->instansi_id == $instansi->id);
         
-        return view('client.instansi', compact('instansi', 'hasManagementAccess'));
+        return view('client.instansi', compact('instansi', 'apps', 'hasManagementAccess'));
     }
 }

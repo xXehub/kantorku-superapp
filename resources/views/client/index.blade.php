@@ -15,9 +15,8 @@
 
                             </div>
                             <div class="col">
-
                                 <div class="card-body">
-                                    <h3 class="h2">Layanan SuperApp</h3>
+                                    <h3 class="h2">SuperApp</h3>
                                     <p class="text-muted"> SuperApp adalah platform layanan digital terpadu yang
                                         dirancang untuk memudahkan masyarakat
                                         dalam mengakses berbagai layanan publik dari berbagai instansi pemerintahan di

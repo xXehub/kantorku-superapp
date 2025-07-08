@@ -7,10 +7,22 @@
         </button>
         <!-- END NAVBAR TOGGLER -->
         <!-- BEGIN NAVBAR LOGO -->
-        <div class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-            <a href=".">
 
-                {{-- LOGO / ICON APP NYA DISINI --}}
+        <div class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+            <a href="." class="d-flex align-items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-building-skyscraper">
+                    <path stroke="none" d="M0 0h32v32H0z" fill="none" />
+                    <path d="M4 28l24 0" />
+                    <path d="M6 28v-18l10 -5v23" />
+                    <path d="M25 28v-13l-8 -5" />
+                    <path d="M12 12l0 .01" />
+                    <path d="M12 16l0 .01" />
+                    <path d="M12 20l0 .01" />
+                    <path d="M12 24l0 .01" />
+                </svg>
+                <h3 class="h2 ms-2 mb-0">KantorKu</h3>
             </a>
         </div>
         <!-- END NAVBAR LOGO -->
@@ -266,7 +278,7 @@
                                 {{-- gawe panel --}}
                                 @if (auth()->user()->hasNonDefaultPermissions())
                             <li class="nav-item">
-                                <a class="nav-link" href="./form-elements.html">
+                                <a class="nav-link" href="{{ route('panel.dashboard') }}">
                                     <span
                                         class="nav-link-icon d-md-none d-lg-inline-block"><!-- Download SVG icon from http://tabler.io/icons/icon/checkbox -->
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -288,7 +300,7 @@
                             @endif
                             <a class="nav-link" href="#" data-bs-toggle="offcanvas"
                                 data-bs-target="#offcanvasSettings">
-                                <span class="badge badge-sm bg-red text-red-fg">Tema</span>
+                                {{-- <span class="badge badge-sm bg-red text-red-fg">Tema</span> --}}
                                 <span class="nav-link-icon d-md-none d-lg-inline-block">
                                     <!-- Download SVG icon from http://tabler.io/icons/icon/settings -->
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
