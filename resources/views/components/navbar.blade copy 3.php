@@ -493,25 +493,30 @@
                     </div>
 
 
-                    {{-- button ku saat ini --}}
+        {{-- button ku saat ini --}}
                     <div class="col col-md-auto">
+
                         <ul class="navbar-nav">
-                            @if (request()->routeIs('panel.*'))
-                                <li class="nav-item"> {{-- When in panel, show "Beranda" button to go back to client --}}
+                            <li class="nav-item">
+                                @if (request()->routeIs('panel.*'))     <li class="nav-item">
+                                      <li class="nav-item">   {{-- When in panel, show "Beranda" button to go back to client --}}
                                     <a class="nav-link" href="{{ route('client') }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="currentColor"
-                                            class="icon icon-tabler icons-tabler-filled icon-tabler-home">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path
-                                                d="M12.707 2.293l9 9c.63 .63 .184 1.707 -.707 1.707h-1v6a3 3 0 0 1 -3 3h-1v-7a3 3 0 0 0 -2.824 -2.995l-.176 -.005h-2a3 3 0 0 0 -3 3v7h-1a3 3 0 0 1 -3 -3v-6h-1c-.89 0 -1.337 -1.077 -.707 -1.707l9 -9a1 1 0 0 1 1.414 0m.293 11.707a1 1 0 0 1 1 1v7h-4v-7a1 1 0 0 1 .883 -.993l.117 -.007z" />
-                                        </svg>
+                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-1">
+                                                <path d="M5 12l-2 0l9 -9l9 9l-2 0" />
+                                                <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+                                                <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+                                            </svg>
+                                        </span>
                                         <span class="nav-link-title"> Beranda </span>
                                     </a>
-                                </li>
-                                @else{{-- When in client, show Panel button if user has panel access --}}
-                                @if (auth()->user()->hasNonDefaultPermissions())
-                                    <li class="nav-item">
+                                    </li>
+                                @else
+                                    {{-- When in client, show Panel button if user has panel access --}}
+                                    @if (auth()->user()->hasNonDefaultPermissions())
                                         <a class="nav-link" href="{{ route('panel.dashboard') }}">
                                             <span class="nav-link-icon d-md-none d-lg-inline-block">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -530,30 +535,28 @@
                                             </span>
                                             <span class="nav-link-title"> Panel </span>
                                         </a>
-                                    </li>
-                                    <li class="nav-item">
+                                    @endif
                                 @endif
-                            @endif
-                            <a class="nav-link" href="#" data-bs-toggle="offcanvas"
-                                data-bs-target="#offcanvasSettings">
-                                {{-- <span class="badge badge-sm bg-red text-red-fg">Tema</span> --}}
-                                <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                    <!-- Download SVG icon from http://tabler.io/icons/icon/settings -->
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round" class="icon icon-1">
-                                        <path
-                                            d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
-                                        <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-                                    </svg>
-                                </span>
-                                <span class="nav-link-title"> Pengaturan </span>
-                            </a>
-                            {{-- <x-tema-builder/> --}}
+                                <a class="nav-link" href="#" data-bs-toggle="offcanvas"
+                                    data-bs-target="#offcanvasSettings">
+                                    {{-- <span class="badge badge-sm bg-red text-red-fg">Tema</span> --}}
+                                    <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                        <!-- Download SVG icon from http://tabler.io/icons/icon/settings -->
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                            stroke-linejoin="round" class="icon icon-1">
+                                            <path
+                                                d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                                            <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                        </svg>
+                                    </span>
+                                    <span class="nav-link-title"> Pengaturan </span>
+                                </a>
+                                {{-- <x-tema-builder/> --}}
                             </li>
                         </ul>
                     </div>
-
+            
                 </div>
             </div>
         </div>
