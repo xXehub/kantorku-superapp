@@ -1,226 +1,547 @@
 <x-app>
-    <div class="container-fluid">
-        <!-- Header -->
-        <div class="row mb-4">
-            <div class="col-12">
-                <div class="card bg-dark text-white">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <h3 class="mb-2">
-                                    <i class="fas fa-cogs"></i> Panel Manajemen
-                                </h3>
-                                <p class="mb-0">Dashboard terpadu untuk mengelola sistem KantorKu SuperApp</p>
-                                <small class="opacity-75">
-                                    <i class="fas fa-user"></i>
-                                    {{ auth()->user()->role ? auth()->user()->role->nama_role : 'User' }} -
-                                    {{ auth()->user()->instansi ? auth()->user()->instansi->nama_instansi : 'No Instansi' }}
-                                </small>
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <a href="{{ route('client') }}" class="btn btn-light">
-                                    <i class="fas fa-home"></i> Kembali ke Client Area
-                                </a>
-                            </div>
+    <div class="page-wrapper">
+        <!-- Page header -->
+        <div class="page-header d-print-none">
+            <div class="container-xl">
+                <div class="row g-2 align-items-center">
+                    <div class="col">
+                        <!-- Page pre-title -->
+                        <div class="page-pretitle">
+                            Summary
+                        </div>
+                        <h2 class="page-title">
+                            Dashboard Superadmin
+                        </h2>
+                    </div>
+                    <!-- Page title actions -->
+                    <div class="col-12 col-md-auto ms-auto d-print-none">
+                        <div class="page-pretitle">
+                            Summary
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Page body -->
+        <div class="page-body">
+            <div class="container-xl">
+                <div class="row row-deck row-cards">
 
-        <!-- Statistics -->
-        <div class="row mb-4">
-            @if (auth()->user()->is_superadmin)
-                <div class="col-md-3">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body text-center">
-                            <i class="fas fa-users fa-2x mb-2"></i>
-                            <h4>{{ $stats['total_users'] ?? 0 }}</h4>
-                            <p>Total Users</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-success text-white">
-                        <div class="card-body text-center">
-                            <i class="fas fa-mobile-alt fa-2x mb-2"></i>
-                            <h4>{{ $stats['total_apps'] ?? 0 }}</h4>
-                            <p>Total Aplikasi</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-info text-white">
-                        <div class="card-body text-center">
-                            <i class="fas fa-building fa-2x mb-2"></i>
-                            <h4>{{ $stats['total_instansi'] ?? 0 }}</h4>
-                            <p>Total Instansi</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-warning text-white">
-                        <div class="card-body text-center">
-                            <i class="fas fa-user-tag fa-2x mb-2"></i>
-                            <h4>{{ $stats['total_roles'] ?? 0 }}</h4>
-                            <p>Total Roles</p>
-                        </div>
-                    </div>
-                </div>
-            @elseif(auth()->user()->role && auth()->user()->role->nama_role === 'Administrator')
-                <div class="col-md-3">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body text-center">
-                            <i class="fas fa-users fa-2x mb-2"></i>
-                            <h4>{{ $stats['instansi_users'] ?? 0 }}</h4>
-                            <p>Users Instansi</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-success text-white">
-                        <div class="card-body text-center">
-                            <i class="fas fa-mobile-alt fa-2x mb-2"></i>
-                            <h4>{{ $stats['instansi_apps'] ?? 0 }}</h4>
-                            <p>Apps Instansi</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-info text-white">
-                        <div class="card-body text-center">
-                            <i class="fas fa-check-circle fa-2x mb-2"></i>
-                            <h4>{{ $stats['active_instansi_apps'] ?? 0 }}</h4>
-                            <p>Apps Aktif</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card bg-warning text-white">
-                        <div class="card-body text-center">
-                            <i class="fas fa-clock fa-2x mb-2"></i>
-                            <h4>{{ $stats['pending_instansi_users'] ?? 0 }}</h4>
-                            <p>Users Pending</p>
-                        </div>
-                    </div>
-                </div>
-            @else
-                <div class="col-md-6">
-                    <div class="card bg-primary text-white">
-                        <div class="card-body text-center">
-                            <i class="fas fa-mobile-alt fa-2x mb-2"></i>
-                            <h4>{{ $stats['my_apps'] ?? 0 }}</h4>
-                            <p>Aplikasi Dikelola</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card bg-info text-white">
-                        <div class="card-body text-center">
-                            <i class="fas fa-building fa-2x mb-2"></i>
-                            <h4>{{ $stats['my_instansi'] ?? 0 }}</h4>
-                            <p>Instansi Terkait</p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-        </div>
-
-        <!-- Management Sections -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-tools"></i> Modul Manajemen
-                        </h5>
-                    </div>
-                    <div class="card-body">
-                        @if (!empty($availableSections))
-                            <div class="row">
-                                @foreach ($availableSections as $key => $section)
-                                    <div class="col-md-4 mb-3">
-                                        <div class="card h-100 border-primary">
-                                            <div class="card-body text-center">
-                                                <i class="{{ $section['icon'] }} fa-3x text-primary mb-3"></i>
-                                                <h5>{{ $section['title'] }}</h5>
-                                                <p class="text-muted">{{ $section['description'] }}</p>
-                                                <a href="{{ route($section['route']) }}" class="btn btn-primary">
-                                                    <i class="fas fa-arrow-right"></i> Kelola
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                        @else
-                            <div class="text-center py-4">
-                                <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
-                                <h5>Tidak Ada Modul Tersedia</h5>
-                                <p class="text-muted">Anda tidak memiliki akses ke modul manajemen apapun.</p>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Activities (if has data) -->
-        @if (!empty($recentData))
-            <div class="row mt-4">
-                @if (isset($recentData['recent_users']) && $recentData['recent_users']->count() > 0)
-                    <div class="col-md-6">
+                    {{-- card 1 --}}
+                    <div class="col-sm-6 col-lg-3">
                         <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">
-                                    <i class="fas fa-users text-primary"></i> User Terbaru
-                                </h6>
-                            </div>
                             <div class="card-body">
-                                @foreach ($recentData['recent_users'] as $user)
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <div>
-                                            <strong>{{ $user->name }}</strong>
-                                            <br><small class="text-muted">{{ $user->email }}</small>
-                                        </div>
-                                        <small class="text-muted">{{ $user->created_at->diffForHumans() }}</small>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="text-muted text-uppercase small fw-bold">TOTAL USER
                                     </div>
-                                    @if (!$loop->last)
-                                        <hr class="my-2">
-                                    @endif
-                                @endforeach
+                                    <div class="dropdown">
+                                        <a class="text-muted" href="#" data-bs-toggle="dropdown">Last 7
+                                            days</a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item active" href="#">Last 7 days</a>
+                                            <a class="dropdown-item" href="#">Last 30 days</a>
+                                            <a class="dropdown-item" href="#">Last 3 months</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="bg-primary text-white avatar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-users">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                                            <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                            <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                                        </svg>
+                                    </span>
+                                    <div class="h1 m-0 ms-3 d-flex align-items-center">
+                                        249
+                                        <div class="ms-2 text-success d-flex align-items-center"
+                                            style="font-size: 15px;">
+                                            7%
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="16"
+                                                height="16" viewBox="0 0 24 24" stroke-width="2"
+                                                stroke="currentColor" fill="none" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <polyline points="3 17 9 11 13 15 21 7" />
+                                                <polyline points="14 7 21 7 21 14" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-flex align-items-center border-top pt-3">
+                                    <a href="#" class="text-muted text-decoration-none small">Lebih
+                                        lengkap</a>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="ms-auto">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <polyline points="9 6 15 12 9 18" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
-                @endif
 
-                @if (isset($recentData['recent_apps']) && $recentData['recent_apps']->count() > 0)
-                    <div class="col-md-6">
+                    {{-- card 2 --}}
+                    <div class="col-sm-6 col-lg-3">
                         <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">
-                                    <i class="fas fa-mobile-alt text-success"></i> Aplikasi Terbaru
-                                </h6>
-                            </div>
                             <div class="card-body">
-                                @foreach ($recentData['recent_apps'] as $app)
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <div>
-                                            <strong>{{ $app->nama_app }}</strong>
-                                            <br><small
-                                                class="text-muted">{{ $app->instansi->nama_instansi ?? 'No Instansi' }}</small>
-                                        </div>
-                                        <small class="text-muted">{{ $app->created_at->diffForHumans() }}</small>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="text-muted text-uppercase small fw-bold">TOTAL APLIKASI
                                     </div>
-                                    @if (!$loop->last)
-                                        <hr class="my-2">
-                                    @endif
-                                @endforeach
+                                    <div class="dropdown">
+                                        <a class="text-muted" href="#" data-bs-toggle="dropdown">Last 7
+                                            days</a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item active" href="#">Last 7 days</a>
+                                            <a class="dropdown-item" href="#">Last 30 days</a>
+                                            <a class="dropdown-item" href="#">Last 3 months</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="bg-green text-white avatar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-apps">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path
+                                                d="M4 4m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                            <path
+                                                d="M4 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                            <path
+                                                d="M14 14m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
+                                            <path d="M14 7l6 0" />
+                                            <path d="M17 4l0 6" />
+                                        </svg>
+                                    </span>
+                                    <div class="h1 m-0 ms-3 d-flex align-items-center">
+                                        249
+                                        <div class="ms-2 text-success d-flex align-items-center"
+                                            style="font-size: 15px;">
+                                            7%
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="16"
+                                                height="16" viewBox="0 0 24 24" stroke-width="2"
+                                                stroke="currentColor" fill="none" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <polyline points="3 17 9 11 13 15 21 7" />
+                                                <polyline points="14 7 21 7 21 14" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-flex align-items-center border-top pt-3">
+                                    <a href="#" class="text-muted text-decoration-none small">Lebih
+                                        lengkap</a>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="ms-auto">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <polyline points="9 6 15 12 9 18" />
+                                    </svg>
+                                </div>
                             </div>
                         </div>
                     </div>
-                @endif
+
+                    {{-- card 3 --}}
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="text-muted text-uppercase small fw-bold">TOTAL INSTANSI
+                                    </div>
+                                    <div class="dropdown">
+                                        <a class="text-muted" href="#" data-bs-toggle="dropdown">Last 7
+                                            days</a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item active" href="#">Last 7 days</a>
+                                            <a class="dropdown-item" href="#">Last 30 days</a>
+                                            <a class="dropdown-item" href="#">Last 3 months</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="bg-primary text-white avatar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-building-skyscraper">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M3 21l18 0" />
+                                            <path d="M5 21v-14l8 -4v18" />
+                                            <path d="M19 21v-10l-6 -4" />
+                                            <path d="M9 9l0 .01" />
+                                            <path d="M9 12l0 .01" />
+                                            <path d="M9 15l0 .01" />
+                                            <path d="M9 18l0 .01" />
+                                        </svg>
+                                    </span>
+                                    <div class="h1 m-0 ms-3 d-flex align-items-center">
+                                        249
+                                        <div class="ms-2 text-success d-flex align-items-center"
+                                            style="font-size: 15px;">
+                                            7%
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="16"
+                                                height="16" viewBox="0 0 24 24" stroke-width="2"
+                                                stroke="currentColor" fill="none" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <polyline points="3 17 9 11 13 15 21 7" />
+                                                <polyline points="14 7 21 7 21 14" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-flex align-items-center border-top pt-3">
+                                    <a href="#" class="text-muted text-decoration-none small">Lebih
+                                        lengkap</a>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="ms-auto">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <polyline points="9 6 15 12 9 18" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- card 4 --}}
+                    <div class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <div class="text-muted text-uppercase small fw-bold">TOTAL ROLES
+                                    </div>
+                                    <div class="dropdown">
+                                        <a class="text-muted" href="#" data-bs-toggle="dropdown">Last 7
+                                            days</a>
+                                        <div class="dropdown-menu dropdown-menu-end">
+                                            <a class="dropdown-item active" href="#">Last 7 days</a>
+                                            <a class="dropdown-item" href="#">Last 30 days</a>
+                                            <a class="dropdown-item" href="#">Last 3 months</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <span class="bg-primary text-white avatar">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icons-tabler-outline icon-tabler-circle-dashed-check">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                            <path d="M8.56 3.69a9 9 0 0 0 -2.92 1.95" />
+                                            <path d="M3.69 8.56a9 9 0 0 0 -.69 3.44" />
+                                            <path d="M3.69 15.44a9 9 0 0 0 1.95 2.92" />
+                                            <path d="M8.56 20.31a9 9 0 0 0 3.44 .69" />
+                                            <path d="M15.44 20.31a9 9 0 0 0 2.92 -1.95" />
+                                            <path d="M20.31 15.44a9 9 0 0 0 .69 -3.44" />
+                                            <path d="M20.31 8.56a9 9 0 0 0 -1.95 -2.92" />
+                                            <path d="M15.44 3.69a9 9 0 0 0 -3.44 -.69" />
+                                            <path d="M9 12l2 2l4 -4" />
+                                        </svg>
+                                    </span>
+                                    <div class="h1 m-0 ms-3 d-flex align-items-center">
+                                        249
+                                        <div class="ms-2 text-success d-flex align-items-center"
+                                            style="font-size: 15px;">
+                                            7%
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon ms-1" width="16"
+                                                height="16" viewBox="0 0 24 24" stroke-width="2"
+                                                stroke="currentColor" fill="none" stroke-linecap="round"
+                                                stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <polyline points="3 17 9 11 13 15 21 7" />
+                                                <polyline points="14 7 21 7 21 14" />
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3 d-flex align-items-center border-top pt-3">
+                                    <a href="#" class="text-muted text-decoration-none small">Lebih
+                                        lengkap</a>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" class="ms-auto">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                        <polyline points="9 6 15 12 9 18" />
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- instansi informasi --}}
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="table-responsive">
+                                <table class="table table-vcenter card-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Instansi</th>
+                                            <th>User</th>
+                                            <th>APlikasi</th>
+                                            <th>Status</th>
+                                            <th class="w-1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Dinas Komunikasi dan Informatika</td>
+                                            <td class="text-secondary">100</td>
+                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
+                                            </td>
+                                            <td class="sort-status">
+                                                <span class="badge bg-success-lt">Active</span>
+                                            </td>
+                                            <td>
+                                                <a href="#">Edit</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dinas Kebudayaan dan Pariwisata</td>
+                                            <td class="text-secondary">100</td>
+                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
+                                            </td>
+                                            <td class="sort-status">
+                                                <span class="badge bg-success-lt">Active</span>
+                                            </td>
+                                            <td>
+                                                <a href="#">Edit</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dinas Lingkungan Hidup</td>
+                                            <td class="text-secondary">100</td>
+                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
+                                            </td>
+                                            <td class="sort-status">
+                                                <span class="badge bg-danger-lt">Inactive</span>
+                                            </td>
+                                            <td>
+                                                <a href="#">Edit</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dinas Perhubungan</td>
+                                            <td class="text-secondary">100</td>
+                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
+                                            </td>
+                                            <td class="sort-status">
+                                                <span class="badge bg-success-lt">Active</span>
+                                            </td>
+                                            <td>
+                                                <a href="#">Edit</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dinas Pendidikan</td>
+                                            <td class="text-secondary">100</td>
+                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
+                                            </td>
+                                            <td class="sort-status">
+                                                <span class="badge bg-success-lt">Active</span>
+                                            </td>
+                                            <td>
+                                                <a href="#">Edit</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dinas Sosial</td>
+                                            <td class="text-secondary">100</td>
+                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
+                                            </td>
+                                            <td class="sort-status">
+                                                <span class="badge bg-danger-lt">Inactive</span>
+                                            </td>
+                                            <td>
+                                                <a href="#">Edit</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Dinas Perikanan</td>
+                                            <td class="text-secondary">100</td>
+                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
+                                            </td>
+                                            <td class="sort-status">
+                                                <span class="badge bg-success-lt">Active</span>
+                                            </td>
+                                            <td>
+                                                <a href="#">Edit</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Polisi Pamong Praja</td>
+                                            <td class="text-secondary">100</td>
+                                            <td class="text-secondary"><a href="#" class="text-reset">5</a>
+                                            </td>
+                                            <td class="sort-status">
+                                                <span class="badge bg-danger-lt">Inactive</span>
+                                            </td>
+                                            <td>
+                                                <a href="#">Edit</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- aplikasi teratas --}}
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">Aplikasi Teratas</h3>
+                                <table class="table table-sm table-borderless">
+                                    <thead>
+                                        <tr>
+                                            <th>Aplikasi</th>
+                                            <th class="text-end">Users</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="progressbg">
+                                                    <div class="progress progress-3 progressbg-progress">
+                                                        <div class="progress-bar bg-primary-lt" style="width: 82.54%"
+                                                            role="progressbar" aria-valuenow="82.54"
+                                                            aria-valuemin="0" aria-valuemax="100"
+                                                            aria-label="82.54% Complete">
+                                                            <span class="visually-hidden">82.54% Complete</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progressbg-text">e-Surat</div>
+                                                </div>
+                                            </td>
+                                            <td class="w-1 fw-bold text-end">4896</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="progressbg">
+                                                    <div class="progress progress-3 progressbg-progress">
+                                                        <div class="progress-bar bg-primary-lt" style="width: 76.29%"
+                                                            role="progressbar" aria-valuenow="76.29"
+                                                            aria-valuemin="0" aria-valuemax="100"
+                                                            aria-label="76.29% Complete">
+                                                            <span class="visually-hidden">76.29% Complete</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progressbg-text">WargaKu</div>
+                                                </div>
+                                            </td>
+                                            <td class="w-1 fw-bold text-end">3652</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="progressbg">
+                                                    <div class="progress progress-3 progressbg-progress">
+                                                        <div class="progress-bar bg-primary-lt" style="width: 72.65%"
+                                                            role="progressbar" aria-valuenow="72.65"
+                                                            aria-valuemin="0" aria-valuemax="100"
+                                                            aria-label="72.65% Complete">
+                                                            <span class="visually-hidden">72.65% Complete</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progressbg-text">e-Health</div>
+                                                </div>
+                                            </td>
+                                            <td class="w-1 fw-bold text-end">3256</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="progressbg">
+                                                    <div class="progress progress-3 progressbg-progress">
+                                                        <div class="progress-bar bg-primary-lt" style="width: 44.89%"
+                                                            role="progressbar" aria-valuenow="44.89"
+                                                            aria-valuemin="0" aria-valuemax="100"
+                                                            aria-label="44.89% Complete">
+                                                            <span class="visually-hidden">44.89% Complete</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progressbg-text">Mal Pelayanan Publik</div>
+                                                </div>
+                                            </td>
+                                            <td class="w-1 fw-bold text-end">986</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="progressbg">
+                                                    <div class="progress progress-3 progressbg-progress">
+                                                        <div class="progress-bar bg-primary-lt" style="width: 41.12%"
+                                                            role="progressbar" aria-valuenow="41.12"
+                                                            aria-valuemin="0" aria-valuemax="100"
+                                                            aria-label="41.12% Complete">
+                                                            <span class="visually-hidden">41.12% Complete</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progressbg-text">SIAGUS</div>
+                                                </div>
+                                            </td>
+                                            <td class="w-1 fw-bold text-end">912</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="progressbg">
+                                                    <div class="progress progress-3 progressbg-progress">
+                                                        <div class="progress-bar bg-primary-lt" style="width: 32.65%"
+                                                            role="progressbar" aria-valuenow="32.65"
+                                                            aria-valuemin="0" aria-valuemax="100"
+                                                            aria-label="32.65% Complete">
+                                                            <span class="visually-hidden">32.65% Complete</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progressbg-text">Satu Data</div>
+                                                </div>
+                                            </td>
+                                            <td class="w-1 fw-bold text-end">855</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="progressbg">
+                                                    <div class="progress progress-3 progressbg-progress">
+                                                        <div class="progress-bar bg-primary-lt" style="width: 16.22%"
+                                                            role="progressbar" aria-valuenow="16.22"
+                                                            aria-valuemin="0" aria-valuemax="100"
+                                                            aria-label="16.22% Complete">
+                                                            <span class="visually-hidden">16.22% Complete</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progressbg-text">e-Parking</div>
+                                                </div>
+                                            </td>
+                                            <td class="w-1 fw-bold text-end">764</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="progressbg">
+                                                    <div class="progress progress-3 progressbg-progress">
+                                                        <div class="progress-bar bg-primary-lt" style="width: 8.69%"
+                                                            role="progressbar" aria-valuenow="8.69" aria-valuemin="0"
+                                                            aria-valuemax="100" aria-label="8.69% Complete">
+                                                            <span class="visually-hidden">8.69% Complete</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="progressbg-text">lh.surabaya.go.id</div>
+                                                </div>
+                                            </td>
+                                            <td class="w-1 fw-bold text-end">686</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        @endif
-    </div>
-</x-app>>
+        </div>
+</x-app>
