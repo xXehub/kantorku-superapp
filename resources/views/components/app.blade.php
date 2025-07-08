@@ -72,7 +72,7 @@
     </div> --}}
 
     <div id="app">
-        <x-tema-builder />
+        <x-navbar.tema-builder />
         <!-- Navigation -->
         @if (
             !in_array(Route::currentRouteName(), [
@@ -165,32 +165,32 @@
 
     <!-- Bootstrap JS (included in Tabler) -->
     <script src="{{ asset('dist/js/tabler.min.js') }}"></script>
-    
+
     <!-- Modal Alert Script - Load immediately without defer -->
     <script src="{{ asset('js/modal-alert.js') }}"></script>
-    
+
     <!-- Debug Modal Alert Loading -->
     <script>
         console.log('Debug: Checking modal alert loading...');
-        
+
         // Check immediately
         if (typeof window.modalAlert !== 'undefined') {
             console.log('Modal alert tersedia langsung:', window.modalAlert);
         } else {
             console.log('Modal alert belum tersedia, menunggu...');
         }
-        
+
         // Check after DOM loaded
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded, checking modal alert again...');
-            
+
             setTimeout(() => {
                 if (typeof window.modalAlert !== 'undefined' && window.modalAlert) {
                     console.log('✅ Modal alert berhasil dimuat:', window.modalAlert);
                     console.log('✅ Modal alert show function:', typeof window.modalAlert.show);
                 } else {
                     console.error('❌ Modal alert gagal dimuat!');
-                    
+
                     // Check if modal element exists
                     const modalElement = document.getElementById('alertModal');
                     if (modalElement) {
@@ -202,7 +202,7 @@
             }, 500);
         });
     </script>
-    
+
     <script src="{{ asset('libs/apexcharts/dist/apexcharts.min.js?1744816593') }}" defer></script>
     <script src="{{ asset('libs/jsvectormap/dist/jsvectormap.min.js?1667333929') }}" defer></script>
     <script src="{{ asset('libs/jsvectormap/dist/maps/world.js?1667333929') }}" defer></script>

@@ -232,9 +232,7 @@
      </div>
  </form>
 
-
  {{-- script --}}
-
  <script>
      document.addEventListener("DOMContentLoaded", function() {
          var themeConfig = {
