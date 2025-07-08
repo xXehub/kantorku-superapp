@@ -491,22 +491,25 @@
                         </ul>
                         <!-- END NAVBAR MENU -->
                     </div>
-
-
                     {{-- button ku saat ini --}}
                     <div class="col col-md-auto">
                         <ul class="navbar-nav">
                             @if (request()->routeIs('panel.*'))
                                 <li class="nav-item"> {{-- When in panel, show "Beranda" button to go back to client --}}
                                     <a class="nav-link" href="{{ route('client') }}">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="currentColor"
-                                            class="icon icon-tabler icons-tabler-filled icon-tabler-home">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                            <path
-                                                d="M12.707 2.293l9 9c.63 .63 .184 1.707 -.707 1.707h-1v6a3 3 0 0 1 -3 3h-1v-7a3 3 0 0 0 -2.824 -2.995l-.176 -.005h-2a3 3 0 0 0 -3 3v7h-1a3 3 0 0 1 -3 -3v-6h-1c-.89 0 -1.337 -1.077 -.707 -1.707l9 -9a1 1 0 0 1 1.414 0m.293 11.707a1 1 0 0 1 1 1v7h-4v-7a1 1 0 0 1 .883 -.993l.117 -.007z" />
-                                        </svg>
-                                        <span class="nav-link-title"> Beranda </span>
+                                        <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon icon-tabler icons-tabler-outline icon-tabler-home-share">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                                <path d="M9 21v-6a2 2 0 0 1 2 -2h2c.247 0 .484 .045 .702 .127" />
+                                                <path d="M19 12h2l-9 -9l-9 9h2v7a2 2 0 0 0 2 2h5" />
+                                                <path d="M16 22l5 -5" />
+                                                <path d="M21 21.5v-4.5h-4.5" />
+                                            </svg>
+                                        </span>
+                                        <span class="nav-link-title"><b> Beranda</b></span>
                                     </a>
                                 </li>
                                 @else{{-- When in client, show Panel button if user has panel access --}}
@@ -528,7 +531,7 @@
                                                         d="M17 13a4 4 0 1 1 -3.995 4.2l-.005 -.2l.005 -.2a4 4 0 0 1 3.995 -3.8z" />
                                                 </svg>
                                             </span>
-                                            <span class="nav-link-title"> Panel </span>
+                                            <span class="nav-link-title"> <b>Panel</b> </span>
                                         </a>
                                     </li>
                                     <li class="nav-item">

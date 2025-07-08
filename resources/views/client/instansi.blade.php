@@ -7,21 +7,22 @@
                     <!-- Filter buttons -->
                     <div class="form-selectgroup d-flex flex-wrap">
                         <label class="form-selectgroup-item">
-                            <input type="radio" name="kategori-filter" value="tampilkan-semua" 
-                                   class="form-selectgroup-input kategori-filter" 
-                                   {{ request('kategori', 'tampilkan-semua') === 'tampilkan-semua' ? 'checked' : '' }} />
+                            <input type="radio" name="kategori-filter" value="tampilkan-semua"
+                                class="form-selectgroup-input kategori-filter"
+                                {{ request('kategori', 'tampilkan-semua') === 'tampilkan-semua' ? 'checked' : '' }} />
                             <span class="form-selectgroup-label">Tampilkan Semua</span>
                         </label>
-                        @foreach($categories as $kategori)
+                        @foreach ($categories as $kategori)
                             <label class="form-selectgroup-item">
-                                <input type="radio" name="kategori-filter" value="{{ $kategori->slug }}" 
-                                       class="form-selectgroup-input kategori-filter"
-                                       {{ request('kategori') === $kategori->slug ? 'checked' : '' }} />
+                                <input type="radio" name="kategori-filter" value="{{ $kategori->slug }}"
+                                    class="form-selectgroup-input kategori-filter"
+                                    {{ request('kategori') === $kategori->slug ? 'checked' : '' }} />
                                 <span class="form-selectgroup-label">
-                                    @if(!empty($kategori->icon))
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" 
-                                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
-                                             stroke-linejoin="round" class="icon icon-tabler icon-tabler-{{ $kategori->icon }} me-1">
+                                    @if (!empty($kategori->icon))
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round"
+                                            class="icon icon-tabler icon-tabler-{{ $kategori->icon }} me-1">
                                         </svg>
                                     @endif
                                     {{ $kategori->nama_kategori }}
@@ -32,8 +33,8 @@
 
                     <!-- Search bar -->
                     <div class="input-icon mb-2">
-                        <input type="text" id="search-input" value="{{ request('search') }}" 
-                               class="form-control" placeholder="Cari aplikasi..." />
+                        <input type="text" id="search-input" value="{{ request('search') }}" class="form-control"
+                            placeholder="Cari aplikasi..." />
                         <span class="input-icon-addon">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -59,8 +60,9 @@
                                 @endif
                                 <h3 class="m-0 mb-1"><a href="#">{{ $app->nama_app }}</a></h3>
                                 <div class="text-secondary mb-2">{{ $app->deskripsi_app }}</div>
-                                @if($app->kategori)
-                                    <span class="badge" style="background-color: {{ $app->kategori->color }}; color: white;">
+                                @if ($app->kategori)
+                                    <span class="badge"
+                                        style="background-color: {{ $app->kategori->color }}; color: white;">
                                         {{ $app->kategori->nama_kategori }}
                                     </span>
                                 @endif
@@ -68,19 +70,21 @@
                             <div class="d-flex">
                                 @auth
                                     @if (auth()->user()->canManageApp($app->id))
-                                        <a href="#" class="card-btn" style="border-right: 1px solid #e6ebf1;">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon me-1">
-                                                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-                                                <circle cx="12" cy="12" r="3"/>
+                                        <a href="#" class="card-btn" >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round" class="icon me-1">
+                                                <path
+                                                    d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                                                <circle cx="12" cy="12" r="3" />
                                             </svg>
                                             Setting
                                         </a>
                                     @endif
                                 @endauth
-                                <a href="{{ $app->url_app ?? '#' }}" 
-                                   class="card-btn" 
-                                   {{ $app->url_app ? 'target="_blank"' : '' }}>
-                                   {{ $app->url_app ? 'Buka Aplikasi' : 'Selengkapnya' }}
+                                <a href="{{ $app->url_app ?? '#' }}" class="card-btn"
+                                    {{ $app->url_app ? 'target="_blank"' : '' }}>
+                                    {{ $app->url_app ? 'Buka Aplikasi' : 'Selengkapnya' }}
                                 </a>
                             </div>
                         </div>
@@ -91,11 +95,12 @@
                             <div class="card-body text-center py-5">
                                 <div class="empty">
                                     <div class="empty-img">
-                                        <img src="{{ asset('static/illustrations/undraw_void_3ggu.svg') }}" height="128" alt="">
+                                        <img src="{{ asset('static/illustrations/undraw_void_3ggu.svg') }}"
+                                            height="128" alt="">
                                     </div>
                                     <p class="empty-title">Tidak ada aplikasi ditemukan</p>
                                     <p class="empty-subtitle text-secondary">
-                                        @if(request('kategori') && request('kategori') !== 'tampilkan-semua')
+                                        @if (request('kategori') && request('kategori') !== 'tampilkan-semua')
                                             Tidak ada aplikasi dalam kategori ini.
                                         @elseif(request('search'))
                                             Tidak ada aplikasi yang sesuai dengan pencarian "{{ request('search') }}".
@@ -186,7 +191,7 @@
             // Handle category filter
             const categoryFilters = document.querySelectorAll('.kategori-filter');
             const searchInput = document.getElementById('search-input');
-            
+
             categoryFilters.forEach(filter => {
                 filter.addEventListener('change', function() {
                     if (this.checked) {
@@ -207,23 +212,23 @@
             function applyFilters() {
                 const selectedCategory = document.querySelector('.kategori-filter:checked').value;
                 const searchValue = searchInput.value.trim();
-                
+
                 // Build URL with filters
                 const url = new URL(window.location.href);
                 url.searchParams.delete('page'); // Reset pagination when filtering
-                
+
                 if (selectedCategory !== 'tampilkan-semua') {
                     url.searchParams.set('kategori', selectedCategory);
                 } else {
                     url.searchParams.delete('kategori');
                 }
-                
+
                 if (searchValue) {
                     url.searchParams.set('search', searchValue);
                 } else {
                     url.searchParams.delete('search');
                 }
-                
+
                 // Redirect with new filters
                 window.location.href = url.toString();
             }

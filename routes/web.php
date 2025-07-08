@@ -39,9 +39,9 @@ Route::get('/beranda', function () {
 
 // Tier 1: "Client" - accessible by all authenticated users (default landing page)
 Route::middleware(['auth'])->group(function () {
-    Route::get('/client', [ClientController::class, 'index'])->name('client');
-    Route::get('/client/aplikasi', [ClientController::class, 'aplikasi'])->name('client.aplikasi');
-    Route::get('/client/instansi/{id}', [ClientController::class, 'showInstansi'])->name('client.instansi.show');
+    Route::get('/beranda', [ClientController::class, 'index'])->name('client');
+    Route::get('/beranda/aplikasi', [ClientController::class, 'aplikasi'])->name('client.aplikasi');
+    Route::get('/beranda/instansi/{id}', [ClientController::class, 'showInstansi'])->name('client.instansi.show');
 });
 
 // Debug route (remove in production)
@@ -70,7 +70,7 @@ Route::middleware(['auth', 'has.panel.access'])->prefix('panel')->name('panel.')
 
     // Instansi Management
     Route::resource('instansi', InstansiController::class);
-    
+
     // Kategori App Management
     Route::resource('kategori', KategoriAppController::class);
 });
