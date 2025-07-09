@@ -12,12 +12,18 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Register custom middleware aliases
         $middleware->alias([
             'has.panel.access' => \App\Http\Middleware\HasPanelAccess::class,
+            'flexible.auth' => \App\Http\Middleware\FlexibleAuth::class,
         ]);
         
-        // No special Sanctum middleware for token-based auth
-        // CSRF not needed for API token authentication
+        // CORS Configuration for API
+        $middleware->api(prepend: [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        ]);
+        
+        // CSRF Protection - exclude API routes
         $middleware->validateCsrfTokens(except: [
             'api/*',
         ]);

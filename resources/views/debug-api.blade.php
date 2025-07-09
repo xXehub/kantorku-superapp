@@ -196,8 +196,22 @@
                                         </button>
                                     </div>
                                     <div class="col-6">
-                                        <button class="btn btn-outline-primary w-100"
-                                            onclick="testEndpoint('/api/panel/roles')">
+                                        <button class="btn btn-outline-success w-100"
+                                            onclick="testEndpoint('/api/debug/auth-test')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                                                class="icon me-1">
+                                                <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                                                <path d="M2 17l10 5 10-5" />
+                                                <path d="M2 12l10 5 10-5" />
+                                            </svg>
+                                            Flexible Auth Test
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button class="btn btn-outline-info w-100"
+                                            onclick="testEndpoint('/api/auth/check')">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
@@ -205,14 +219,8 @@
                                                 <circle cx="12" cy="12" r="3" />
                                                 <path d="M12 1v6" />
                                                 <path d="M12 17v6" />
-                                                <path d="M4.2 4.2l4.2 4.2" />
-                                                <path d="M15.6 15.6l4.2 4.2" />
-                                                <path d="M1 12h6" />
-                                                <path d="M17 12h6" />
-                                                <path d="M4.2 19.8l4.2-4.2" />
-                                                <path d="M15.6 8.4l4.2-4.2" />
                                             </svg>
-                                            Roles
+                                            Check Auth Status
                                         </button>
                                     </div>
                                 </div>
@@ -570,23 +578,36 @@
         });
 
         function testEndpoint(url, method = 'GET') {
-            if (!currentToken) {
-                showQuickResult('Please login first to test API endpoints', 'warning');
-                return;
+            // Support both session-based and token-based authentication
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+
+            // Add token if available
+            if (currentToken) {
+                headers['Authorization'] = 'Bearer ' + currentToken;
+            }
+
+            // Add CSRF token for session-based requests
+            const csrfToken = $('meta[name="csrf-token"]').attr('content');
+            if (csrfToken && !currentToken) {
+                headers['X-CSRF-TOKEN'] = csrfToken;
             }
 
             $.ajax({
                 url: url,
                 type: method,
-                headers: {
-                    'Authorization': 'Bearer ' + currentToken,
-                    'Content-Type': 'application/json'
+                headers: headers,
+                xhrFields: {
+                    withCredentials: true // Important for session-based auth
                 },
                 success: function(response) {
                     let message = 'API call successful';
                     if (response.data) {
                         if (Array.isArray(response.data)) {
                             message += ` - ${response.data.length} items returned`;
+                        } else if (response.data.auth_method) {
+                            message += ` (Auth: ${response.data.auth_method})`;
                         }
                     }
                     showQuickResult(message, 'success');
@@ -594,8 +615,11 @@
                 },
                 error: function(xhr) {
                     const response = xhr.responseJSON || {};
-                    showQuickResult(`API call failed: ${response.message || xhr.statusText}`,
-                        'danger');
+                    let errorMsg = response.message || xhr.statusText;
+                    if (xhr.status === 401) {
+                        errorMsg = 'Authentication failed. Try logging in first.';
+                    }
+                    showQuickResult(`API call failed: ${errorMsg}`, 'danger');
                     showResponse(response, url, method, xhr.status);
                 }
             });

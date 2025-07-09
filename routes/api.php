@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Panel\PermissionController;
 use App\Http\Controllers\Api\Panel\RoleController;
@@ -27,6 +28,19 @@ use App\Http\Controllers\Api\Panel\UserController;
  */
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/csrf-cookie', [AuthController::class, 'csrfCookie']);
+    Route::get('/check', [AuthController::class, 'checkAuth']);
+});
+
+/**
+ * Sanctum CSRF Cookie Route (for SPA)
+ */
+Route::get('/sanctum/csrf-cookie', function () {
+    return response()->json([
+        'success' => true,
+        'message' => 'CSRF cookie has been set',
+        'csrf_token' => csrf_token()
+    ]);
 });
 
 /**
@@ -62,13 +76,13 @@ Route::prefix('info')->group(function () {
 });
 
 // ============================================================================
-// PROTECTED API ROUTES (Authentication Required)
+// PROTECTED API ROUTES (Flexible Authentication - Session or Token)
 // ============================================================================
 
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('flexible.auth')->group(function () {
 
     /**
-     * Authentication routes (harus pake require token)
+     * Authentication routes (authenticated users only)
      */
     Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
@@ -77,9 +91,19 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/profile', [AuthController::class, 'updateProfile']);
 
         Route::get('/tokens', function (Request $request) {
+            $user = $request->user();
+            
+            // Only show tokens if authenticated via token (not session)
+            if (!$request->bearerToken()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'This endpoint requires token authentication'
+                ], 403);
+            }
+            
             return response()->json([
                 'success' => true,
-                'data' => $request->user()->tokens->map(function ($token) {
+                'data' => $user->tokens->map(function ($token) {
                     return [
                         'id' => $token->id,
                         'name' => $token->name,
@@ -93,17 +117,21 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     /**
-     * Legacy Sanctum User Endpoint
+     * Legacy Sanctum User Endpoint (supports both auth methods)
      */
     Route::get('/user', function (Request $request) {
+        $user = $request->user();
+        $authMethod = $request->bearerToken() ? 'token' : 'session';
+        
         return response()->json([
             'success' => true,
-            'data' => $request->user()
+            'data' => $user,
+            'auth_method' => $authMethod,
         ]);
     });
 
     /**
-     * Panel Management Routes (requires super admin)
+     * Panel Management Routes (requires super admin + flexible auth)
      */
     Route::middleware('has.panel.access')->prefix('panel')->name('api.panel.')->group(function () {
 
@@ -160,7 +188,27 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::prefix('debug')->group(function () {
 
-    // Test token authentication
+    // Test flexible authentication
+    Route::middleware('flexible.auth')->get('/auth-test', function (Request $request) {
+        $user = $request->user();
+        $authMethod = $request->bearerToken() ? 'token' : 'session';
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Flexible authentication working',
+            'data' => [
+                'user' => $user->only(['id', 'name', 'email']),
+                'is_super_admin' => $user->isSuperAdmin(),
+                'auth_method' => $authMethod,
+                'bearer_token_present' => $request->bearerToken() ? true : false,
+                'session_exists' => $request->hasSession() && $request->session()->has('login_web_*'),
+                'current_guard' => config('auth.defaults.guard'),
+                'server_time' => now(),
+            ]
+        ]);
+    });
+
+    // Test token authentication only
     Route::middleware('auth:sanctum')->get('/token-auth', function (Request $request) {
         return response()->json([
             'success' => true,
@@ -168,9 +216,24 @@ Route::prefix('debug')->group(function () {
             'data' => [
                 'user' => $request->user()->only(['id', 'name', 'email']),
                 'is_super_admin' => $request->user()->isSuperAdmin(),
-                'token_name' => $request->user()->currentAccessToken()->name,
-                'token_id' => $request->user()->currentAccessToken()->id,
+                'token_name' => optional($request->user()->currentAccessToken())->name,
+                'token_id' => optional($request->user()->currentAccessToken())->id,
                 'auth_guard' => 'sanctum',
+                'server_time' => now(),
+            ]
+        ]);
+    });
+
+    // Test session authentication only
+    Route::middleware('auth:web')->get('/session-auth', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Session authentication working',
+            'data' => [
+                'user' => $request->user()->only(['id', 'name', 'email']),
+                'is_super_admin' => $request->user()->isSuperAdmin(),
+                'session_id' => $request->session()->getId(),
+                'auth_guard' => 'web',
                 'server_time' => now(),
             ]
         ]);
@@ -209,7 +272,8 @@ Route::prefix('debug')->group(function () {
                 'laravel_version' => app()->version(),
                 'php_version' => PHP_VERSION,
                 'memory_usage' => round(memory_get_usage(true) / 1024 / 1024, 2) . ' MB',
-                'uptime' => 'N/A', // Would need process tracking for real uptime
+                'sanctum_installed' => class_exists('Laravel\Sanctum\Sanctum'),
+                'cors_configured' => config('cors.paths') !== null,
             ]
         ]);
     });

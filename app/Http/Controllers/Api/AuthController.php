@@ -12,7 +12,9 @@ use Illuminate\Validation\ValidationException;
 class AuthController extends Controller
 {
     /**
-     * Login dengan email dan password, return token
+     * Login dengan email dan password
+     * - Untuk API requests: return token
+     * - Untuk browser requests: set session + optional token
      * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -24,6 +26,8 @@ class AuthController extends Controller
             $credentials = $request->validate([
                 'email' => 'required|email',
                 'password' => 'required|string|min:6',
+                'remember' => 'sometimes|boolean',
+                'token_name' => 'sometimes|string|max:255',
             ]);
 
             // Cari user berdasarkan email
@@ -37,22 +41,42 @@ class AuthController extends Controller
                 ], 401);
             }
 
-            // Buat token untuk user
-            $token = $user->createToken('api-token')->plainTextToken;
+            // Determine if this is a browser request or API request
+            $isBrowserRequest = !$request->expectsJson() && !$request->is('api/*') && 
+                               !$request->hasHeader('Authorization') && 
+                               !$request->wantsJson();
+
+            $responseData = [
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'is_super_admin' => $user->isSuperAdmin(),
+                ],
+                'auth_method' => null,
+            ];
+
+            // Untuk browser requests, set session
+            if ($isBrowserRequest) {
+                Auth::login($user, $credentials['remember'] ?? false);
+                $responseData['auth_method'] = 'session';
+                $responseData['message'] = 'Login berhasil dengan session';
+            } else {
+                // Untuk API requests, buat token
+                $tokenName = $credentials['token_name'] ?? 'api-token-' . now()->format('Y-m-d-H-i-s');
+                $token = $user->createToken($tokenName)->plainTextToken;
+                
+                $responseData['token'] = $token;
+                $responseData['token_type'] = 'Bearer';
+                $responseData['token_name'] = $tokenName;
+                $responseData['auth_method'] = 'token';
+                $responseData['message'] = 'Login berhasil dengan token';
+            }
 
             return response()->json([
                 'success' => true,
                 'message' => 'Login berhasil',
-                'data' => [
-                    'user' => [
-                        'id' => $user->id,
-                        'name' => $user->name,
-                        'email' => $user->email,
-                        'is_super_admin' => $user->isSuperAdmin(),
-                    ],
-                    'token' => $token,
-                    'token_type' => 'Bearer',
-                ],
+                'data' => $responseData,
             ]);
 
         } catch (ValidationException $e) {
@@ -70,7 +94,9 @@ class AuthController extends Controller
     }
 
     /**
-     * Logout user (revoke token aktif)
+     * Logout user
+     * - Untuk session-based: logout dari session
+     * - Untuk token-based: revoke current token
      * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -78,12 +104,30 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         try {
-            // Revoke token yang sedang digunakan
-            $request->user()->currentAccessToken()->delete();
+            $user = $request->user();
+            
+            // Cek apakah menggunakan token atau session
+            if ($request->bearerToken() && $user->currentAccessToken()) {
+                // Token-based logout
+                $user->currentAccessToken()->delete();
+                $message = 'Token berhasil dihapus';
+                $authMethod = 'token';
+            } else {
+                // Session-based logout
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                $message = 'Session logout berhasil';
+                $authMethod = 'session';
+            }
 
             return response()->json([
                 'success' => true,
-                'message' => 'Logout berhasil',
+                'message' => $message,
+                'data' => [
+                    'auth_method' => $authMethod,
+                    'logged_out_at' => now(),
+                ]
             ]);
 
         } catch (\Exception $e) {
@@ -121,6 +165,7 @@ class AuthController extends Controller
 
     /**
      * Get profile user yang sedang login
+     * Works for both session and token auth
      * 
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -129,6 +174,19 @@ class AuthController extends Controller
     {
         try {
             $user = $request->user();
+            
+            $authMethod = 'session';
+            $tokenInfo = null;
+            
+            // Cek jika menggunakan token auth
+            if ($request->bearerToken() && $user->currentAccessToken()) {
+                $authMethod = 'token';
+                $tokenInfo = [
+                    'token_name' => $user->currentAccessToken()->name,
+                    'token_created' => $user->currentAccessToken()->created_at,
+                    'token_last_used' => $user->currentAccessToken()->last_used_at,
+                ];
+            }
 
             return response()->json([
                 'success' => true,
@@ -147,8 +205,8 @@ class AuthController extends Controller
                         'created_at' => $user->created_at,
                         'updated_at' => $user->updated_at,
                     ],
-                    'token_name' => $user->currentAccessToken()->name,
-                    'token_created' => $user->currentAccessToken()->created_at,
+                    'auth_method' => $authMethod,
+                    'token_info' => $tokenInfo,
                 ],
             ]);
 
@@ -207,5 +265,61 @@ class AuthController extends Controller
                 'message' => 'Gagal update profile: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Get CSRF Cookie (required for SPA authentication)
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function csrfCookie()
+    {
+        return response()->json([
+            'success' => true,
+            'message' => 'CSRF cookie set',
+            'data' => [
+                'csrf_token' => csrf_token(),
+            ]
+        ]);
+    }
+
+    /**
+     * Check current authentication status
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function checkAuth(Request $request)
+    {
+        $isAuthenticated = false;
+        $authMethod = null;
+        $user = null;
+
+        // Cek session auth
+        if (Auth::guard('web')->check()) {
+            $isAuthenticated = true;
+            $authMethod = 'session';
+            $user = Auth::guard('web')->user();
+        }
+        // Cek token auth
+        elseif ($request->bearerToken() && Auth::guard('sanctum')->check()) {
+            $isAuthenticated = true;
+            $authMethod = 'token';
+            $user = Auth::guard('sanctum')->user();
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'authenticated' => $isAuthenticated,
+                'auth_method' => $authMethod,
+                'user' => $user ? [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'is_super_admin' => $user->isSuperAdmin(),
+                ] : null,
+            ]
+        ]);
     }
 }
