@@ -30,6 +30,34 @@ Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/csrf-cookie', [AuthController::class, 'csrfCookie']);
     Route::get('/check', [AuthController::class, 'checkAuth']);
+    
+    // Quick login endpoint untuk development/testing
+    Route::post('/quick-login', function (Request $request) {
+        $email = $request->input('email', 'admin@example.com');
+        
+        $user = \App\Models\User::where('email', $email)->first();
+        
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+        
+        // Create token
+        $token = $user->createToken('API Token', ['*']);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Quick login successful',
+            'data' => [
+                'user' => $user->only(['id', 'name', 'email', 'is_superadmin']),
+                'token' => $token->plainTextToken,
+                'token_name' => $token->accessToken->name,
+                'is_super_admin' => $user->isSuperAdmin(),
+            ]
+        ]);
+    });
 });
 
 /**
@@ -79,7 +107,11 @@ Route::prefix('info')->group(function () {
 // PROTECTED API ROUTES (Flexible Authentication - Session or Token)
 // ============================================================================
 
-Route::middleware('flexible.auth')->group(function () {
+// ============================================================================
+// PROTECTED API ROUTES (Flexible Authentication - Session or Token)  
+// ============================================================================
+
+Route::middleware(['flexible.auth'])->group(function () {
 
     /**
      * Authentication routes (authenticated users only)
@@ -92,7 +124,7 @@ Route::middleware('flexible.auth')->group(function () {
 
         Route::get('/tokens', function (Request $request) {
             $user = $request->user();
-            
+
             // Only show tokens if authenticated via token (not session)
             if (!$request->bearerToken()) {
                 return response()->json([
@@ -100,7 +132,7 @@ Route::middleware('flexible.auth')->group(function () {
                     'message' => 'This endpoint requires token authentication'
                 ], 403);
             }
-            
+
             return response()->json([
                 'success' => true,
                 'data' => $user->tokens->map(function ($token) {
@@ -122,7 +154,7 @@ Route::middleware('flexible.auth')->group(function () {
     Route::get('/user', function (Request $request) {
         $user = $request->user();
         $authMethod = $request->bearerToken() ? 'token' : 'session';
-        
+
         return response()->json([
             'success' => true,
             'data' => $user,
@@ -130,54 +162,55 @@ Route::middleware('flexible.auth')->group(function () {
         ]);
     });
 
-    /**
-     * Panel Management Routes (requires super admin + flexible auth)
-     */
-    Route::middleware('has.panel.access')->prefix('panel')->name('api.panel.')->group(function () {
+});
 
-        // Users API
-        Route::apiResource('users', UserController::class);
+// ============================================================================
+// PANEL API ROUTES (Requires Panel Access + Authentication)
+// ============================================================================
 
-        // Roles API
-        Route::apiResource('roles', RoleController::class);
-        Route::get('roles/{role}/permissions', [RoleController::class, 'permissions'])->name('roles.permissions');
-        Route::put('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
+Route::middleware(['flexible.auth', 'has.panel.access'])->prefix('panel')->name('api.panel.')->group(function () {
 
-        // Permissions API
-        Route::apiResource('permissions', PermissionController::class);
+    // Users API
+    Route::apiResource('users', UserController::class);
 
-        // Dashboard/Stats endpoint for panel
-        Route::get('dashboard', function () {
-            return response()->json([
-                'success' => true,
-                'data' => [
-                    'users' => [
-                        'total' => \App\Models\User::count(),
-                        'superadmins' => \App\Models\User::where('is_superadmin', true)->count(),
-                        'recent' => \App\Models\User::latest()->limit(5)->get(['id', 'name', 'email', 'created_at'])
-                    ],
-                    'roles' => [
-                        'total' => \App\Models\Role::count(),
-                        'with_users' => \App\Models\Role::has('users')->count(),
-                        'recent' => \App\Models\Role::latest()->limit(5)->get(['id', 'name', 'created_at'])
-                    ],
-                    'permissions' => [
-                        'total' => \App\Models\Permission::count(),
-                        'groups' => \App\Models\Permission::selectRaw('`group`, COUNT(*) as count')->groupBy('group')->get(),
-                        'recent' => \App\Models\Permission::latest()->limit(5)->get(['id', 'name', 'group', 'created_at'])
-                    ],
-                    'instansi' => [
-                        'total' => \App\Models\Instansi::count(),
-                        'with_users' => \App\Models\Instansi::has('users')->count()
-                    ],
-                    'apps' => [
-                        'total' => \App\Models\MasterApp::count(),
-                        'active' => \App\Models\MasterApp::where('is_active', true)->count()
-                    ]
+    // Roles API
+    Route::apiResource('roles', RoleController::class);
+    Route::get('roles/{role}/permissions', [RoleController::class, 'permissions'])->name('roles.permissions');
+    Route::put('roles/{role}/permissions', [RoleController::class, 'updatePermissions'])->name('roles.updatePermissions');
+
+    // Permissions API
+    Route::apiResource('permissions', PermissionController::class);
+
+    // Dashboard/Stats endpoint for panel
+    Route::get('dashboard', function () {
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'users' => [
+                    'total' => \App\Models\User::count(),
+                    'superadmins' => \App\Models\User::where('is_superadmin', true)->count(),
+                    'recent' => \App\Models\User::latest()->limit(5)->get(['id', 'name', 'email', 'created_at'])
+                ],
+                'roles' => [
+                    'total' => \App\Models\Role::count(),
+                    'with_users' => \App\Models\Role::has('users')->count(),
+                    'recent' => \App\Models\Role::latest()->limit(5)->get(['id', 'name', 'created_at'])
+                ],
+                'permissions' => [
+                    'total' => \App\Models\Permission::count(),
+                    'groups' => \App\Models\Permission::selectRaw('`group`, COUNT(*) as count')->groupBy('group')->get(),
+                    'recent' => \App\Models\Permission::latest()->limit(5)->get(['id', 'name', 'group', 'created_at'])
+                ],
+                'instansi' => [
+                    'total' => \App\Models\Instansi::count(),
+                    'with_users' => \App\Models\Instansi::has('users')->count()
+                ],
+                'apps' => [
+                    'total' => \App\Models\MasterApp::count(),
+                    'active' => \App\Models\MasterApp::where('is_active', true)->count()
                 ]
-            ]);
-        });
-
+            ]
+        ]);
     });
 
 });
@@ -186,13 +219,47 @@ Route::middleware('flexible.auth')->group(function () {
 // DEBUG ROUTES (Remove in production)
 // ============================================================================
 
+// ============================================================================
+// DEBUG ROUTES (Remove in production)
+// ============================================================================
+
 Route::prefix('debug')->group(function () {
+
+    // Test auth status tanpa middleware 
+    Route::get('/auth-status', function (Request $request) {
+        return response()->json([
+            'success' => true,
+            'message' => 'Auth status check',
+            'data' => [
+                'web_guard_check' => Auth::guard('web')->check(),
+                'sanctum_guard_check' => Auth::guard('sanctum')->check(),
+                'auth_check' => Auth::check(),
+                'bearer_token_present' => $request->bearerToken() ? true : false,
+                'bearer_token' => $request->bearerToken() ? substr($request->bearerToken(), 0, 10) . '...' : null,
+                'session_id' => $request->hasSession() ? $request->session()->getId() : null,
+                'default_guard' => config('auth.defaults.guard'),
+                'sanctum_driver' => config('auth.guards.sanctum.driver'),
+                'web_driver' => config('auth.guards.web.driver'),
+                'cookies' => $request->cookies->all(),
+                'headers' => [
+                    'authorization' => $request->header('authorization'),
+                    'cookie' => $request->header('cookie'),
+                    'x-csrf-token' => $request->header('x-csrf-token'),
+                    'content-type' => $request->header('content-type'),
+                    'accept' => $request->header('accept'),
+                ],
+                'current_user_web' => Auth::guard('web')->user()?->only(['id', 'name', 'email']),
+                'current_user_sanctum' => Auth::guard('sanctum')->user()?->only(['id', 'name', 'email']),
+                'server_time' => now(),
+            ]
+        ]);
+    });
 
     // Test flexible authentication
     Route::middleware('flexible.auth')->get('/auth-test', function (Request $request) {
         $user = $request->user();
         $authMethod = $request->bearerToken() ? 'token' : 'session';
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Flexible authentication working',

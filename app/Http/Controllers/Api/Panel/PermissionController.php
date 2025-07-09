@@ -23,18 +23,28 @@ class PermissionController extends Controller
         try {
             $user = auth()->user();
             
-            // Debug log
+            // Debug log yang lebih detail
             \Log::info('Permission API called', [
                 'user_id' => $user?->id,
+                'user_email' => $user?->email,
                 'is_super_admin' => $user?->isSuperAdmin(),
-                'request_data' => $request->all()
+                'request_data' => $request->all(),
+                'auth_check' => auth()->check(),
+                'bearer_token' => $request->bearerToken() ? 'present' : 'absent',
+                'session_id' => $request->hasSession() ? $request->session()->getId() : null,
+                'guards' => [
+                    'web' => \Auth::guard('web')->check(),
+                    'sanctum' => \Auth::guard('sanctum')->check(),
+                ]
             ]);
             
             if (!$user) {
+                \Log::warning('Permission API: User not authenticated');
                 return response()->json(['error' => 'User not authenticated'], 401);
             }
             
             if (!$user->isSuperAdmin()) {
+                \Log::warning('Permission API: Access denied for user', ['user_id' => $user->id]);
                 return response()->json(['error' => 'Access denied. Super admin only.'], 403);
             }
 

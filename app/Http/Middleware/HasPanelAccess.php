@@ -16,9 +16,10 @@ class HasPanelAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
+        // Pastikan user sudah authenticated
         if (!auth()->check()) {
             // For API requests, return JSON error
-            if ($request->expectsJson() || $request->is('api/*')) {
+            if ($request->expectsJson() || $request->is('api/*') || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Authentication required'
@@ -29,9 +30,21 @@ class HasPanelAccess
 
         $user = auth()->user();
 
+        // Pastikan user ada dan valid
+        if (!$user) {
+            if ($request->expectsJson() || $request->is('api/*') || $request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'User not found'
+                ], 401);
+            }
+            return redirect()->route('login');
+        }
+
+        // Check panel access
         if (!$user->hasNonDefaultPermissions()) {
             // For API requests, return JSON error
-            if ($request->expectsJson() || $request->is('api/*')) {
+            if ($request->expectsJson() || $request->is('api/*') || $request->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Access denied. Panel access required.'

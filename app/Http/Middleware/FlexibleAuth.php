@@ -20,22 +20,50 @@ class FlexibleAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Cek apakah sudah authenticated via session (web guard)
-        if (Auth::guard('web')->check()) {
-            // User sudah login via session
-            return $next($request);
-        }
+        $authenticated = false;
+        $user = null;
 
-        // Cek apakah ada Bearer token dan valid (sanctum guard)
+        // 1. Cek authentication via Bearer token (Sanctum)
         if ($request->bearerToken()) {
-            // Cek auth via sanctum
-            if (Auth::guard('sanctum')->check()) {
-                return $next($request);
+            try {
+                if (Auth::guard('sanctum')->check()) {
+                    $user = Auth::guard('sanctum')->user();
+                    $authenticated = true;
+                    
+                    // Set authenticated user to default auth
+                    Auth::setUser($user);
+                }
+            } catch (\Exception $e) {
+                \Log::warning('Sanctum auth failed', ['error' => $e->getMessage()]);
             }
         }
 
-        // Tidak authenticated sama sekali
-        if ($request->expectsJson() || $request->is('api/*')) {
+        // 2. Fallback ke session-based auth (Web guard)
+        if (!$authenticated && Auth::guard('web')->check()) {
+            $user = Auth::guard('web')->user();
+            $authenticated = true;
+        }
+
+        // 3. Jika tetap tidak authenticated
+        if (!$authenticated || !$user) {
+            return $this->unauthenticatedResponse($request);
+        }
+
+        // Set user untuk request
+        $request->setUserResolver(function () use ($user) {
+            return $user;
+        });
+
+        return $next($request);
+    }
+
+    /**
+     * Handle unauthenticated response
+     */
+    private function unauthenticatedResponse(Request $request): Response
+    {
+        // Untuk API requests, return JSON error
+        if ($request->expectsJson() || $request->is('api/*') || $request->wantsJson()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Belum terautentikasi. Tolong login terlebih dahulu.',
