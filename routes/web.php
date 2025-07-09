@@ -18,9 +18,13 @@ use App\Http\Controllers\ModalAlertExampleController;
 | Minimal web routes - most functionality is in API routes
 */
 
+// Main homepage redirect - always redirect / to /beranda
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/beranda');
 });
+
+// Main homepage - accessible to everyone (guests and authenticated users)
+Route::get('/beranda', [ClientController::class, 'index'])->name('client');
 
 Auth::routes();
 
@@ -34,27 +38,13 @@ Route::get('/dev-login', function () {
     $user = App\Models\User::first();
     if ($user) {
         Auth::login($user);
-        return redirect('/debug-api')->with('success', 'Logged in as: ' . $user->name . '. Test API with token authentication.');
+        return redirect('/beranda')->with('success', 'Logged in as: ' . $user->name . '. Test API with token authentication.');
     }
     return redirect('/login')->with('error', 'No users found. Please register first.');
 })->name('dev.login');
 
-// Legacy redirects
-Route::get('/home', function () {
-    return redirect('/debug-api');
-})->name('home');
-
-Route::get('/dashboard', function () {
-    return redirect('/debug-api');
-})->name('dashboard');
-
-Route::get('/beranda', function () {
-    return redirect('/debug-api');
-})->name('beranda');
-
-// Tier 1: "Client" - yang bisa diakses semua user yang ter auth (default landing page)
+// Tier 1: "Client" - pages that require authentication
 Route::middleware(['auth'])->group(function () {
-    Route::get('/beranda', [ClientController::class, 'index'])->name('client');
     Route::get('/beranda/aplikasi', [ClientController::class, 'aplikasi'])->name('client.aplikasi');
     Route::get('/beranda/instansi/{id}', [ClientController::class, 'showInstansi'])->name('client.instansi.show');
 });

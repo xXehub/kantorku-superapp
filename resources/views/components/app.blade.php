@@ -83,6 +83,7 @@
                 'password.confirm',
                 'verification.notice',
                 'verification.verify',
+                'debug.api',
             ]))
             <x-navbar />
         @endif
@@ -143,6 +144,7 @@
                 'password.confirm',
                 'verification.notice',
                 'verification.verify',
+                'debug-api',
             ]))
             <x-footer />
         @endif

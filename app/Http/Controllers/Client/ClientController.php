@@ -13,15 +13,16 @@ class ClientController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth');
+        // Only require auth for specific methods that need authentication
+        $this->middleware('auth')->only(['aplikasi', 'showInstansi']);
     }
 
     /**
-     * Display the universal client landing page for all users
+     * Display the universal client landing page for all users (including guests)
      */
     public function index()
     {
-        $user = auth()->user();
+        $user = auth()->user(); // This can be null for guests
         
         // Get all active apps and instansi for public viewing
         $apps = MasterApp::where('is_active', true)
@@ -37,16 +38,16 @@ class ClientController extends Controller
             ->latest()
             ->paginate(8);
         
-        // Check if user has panel access
-        $hasPanelAccess = $user->hasNonDefaultPermissions();
+        // Check if user has panel access (null-safe for guests)
+        $hasPanelAccess = $user ? $user->hasNonDefaultPermissions() : false;
         
-        // Get user's instansi info
-        $userInstansi = $user->instansi;
+        // Get user's instansi info (null for guests)
+        $userInstansi = $user ? $user->instansi : null;
         
-        // Get user's managed app (if any)
-        $managedApp = $user->managedApp;
+        // Get user's managed app (null for guests)
+        $managedApp = $user ? $user->managedApp : null;
         
-        return view('client.index', compact(
+        return view('beranda', compact(
             'apps', 
             'instansi', 
             'hasPanelAccess', 

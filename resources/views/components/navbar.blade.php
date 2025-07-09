@@ -88,24 +88,45 @@
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link d-flex lh-1 p-0 px-2" data-bs-toggle="dropdown"
                     aria-label="Open user menu">
-                    @if (Auth::user()->avatar)
-                        <span class="avatar avatar-sm" style="background-image: url({{ Auth::user()->avatar }})"></span>
+                    @auth
+                        @if (Auth::user()->avatar)
+                            <span class="avatar avatar-sm" style="background-image: url({{ Auth::user()->avatar }})"></span>
+                        @else
+                            <span class="avatar avatar-sm">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                        @endif
+                        <div class="d-none d-xl-block ps-2">
+                            <div>{{ Auth::user()->name }}</div>
+                            <div class="mt-1 small text-secondary">
+                                @if (Auth::user()->is_superadmin)
+                                    Superadmin
+                                @elseif(Auth::user()->role)
+                                    {{ Auth::user()->role->nama_role }}
+                                @else
+                                    User
+                                @endif
+                            </div>
+                        </div>
                     @else
-                        <span class="avatar avatar-sm">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
-                    @endif
-                    <div class="d-none d-xl-block ps-2">
-                        <div>{{ Auth::user()->name }}</div>
-                        <div class="mt-1 small text-secondary">{{ Auth::user()->role->nama_role }}</div>
-                    </div>
+                        <span class="avatar avatar-sm">?</span>
+                        <div class="d-none d-xl-block ps-2">
+                            <div>Guest</div>
+                            <div class="mt-1 small text-secondary">Not logged in</div>
+                        </div>
+                    @endauth
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                    <a href="#" class="dropdown-item">Profile</a>
-                    <a href="#" class="dropdown-item">Pengaturan</a>
-                    <div class="dropdown-divider"></div>
-                    <a href="#" class="dropdown-item" onclick="confirmLogout()">Keluar</a>
-                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                        @csrf
-                    </form>
+                    @auth
+                        <a href="#" class="dropdown-item">Profile</a>
+                        <a href="#" class="dropdown-item">Pengaturan</a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item" onclick="confirmLogout()">Keluar</a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="dropdown-item">Login</a>
+                        <a href="{{ route('register') }}" class="dropdown-item">Register</a>
+                    @endauth
                 </div>
             </div>
         </div>
@@ -181,7 +202,7 @@
                         <ul class="navbar-nav">
                             @if (request()->routeIs('panel.*'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('client') }}">
+                                    <a class="nav-link" href="{{ route('beranda') }}">
                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
                                             <x-icon name="home-share" />
                                         </span>
@@ -189,16 +210,18 @@
                                     </a>
                                 </li>
                             @else
-                                @if (auth()->user()->hasNonDefaultPermissions())
-                                    <li class="nav-item">
-                                        <a class="nav-link" href="{{ route('panel.dashboard') }}">
-                                            <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                                <x-icon name="category" />
-                                            </span>
-                                            <span class="nav-link-title"> <b>Panel</b> </span>
-                                        </a>
-                                    </li>
-                                @endif
+                                @auth
+                                    @if (auth()->user()->is_superadmin || (auth()->user()->role && auth()->user()->role->permissions()->count() > 0))
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ route('panel.dashboard') }}">
+                                                <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                                    <x-icon name="category" />
+                                                </span>
+                                                <span class="nav-link-title"> <b>Panel</b> </span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endauth
                             @endif
 
                             <li class="nav-item">
