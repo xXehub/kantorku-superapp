@@ -130,9 +130,10 @@
                                     <a href="{{ route('client.instansi.show', $item->id) }}"
                                         class="card-btn">Selengkapnya</a>
                                 @else
-                                    <a href="{{ route('login') }}" class="card-btn" 
-                                       onclick="return confirm('Anda harus login terlebih dahulu untuk melihat detail instansi. Lanjutkan ke halaman login?')">
-                                        Login untuk Selengkapnya
+                                    <a href="{{ route('login') }}" class="card-btn"
+                                        onclick="return confirm('Anda harus login terlebih dahulu untuk melihat detail instansi. Lanjutkan ke halaman login?')">
+                                        {{-- Login untuk Selengkapnya --}}
+                                        Selengkapnya
                                     </a>
                                 @endauth
                             </div>

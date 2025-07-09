@@ -13,8 +13,8 @@ class ClientController extends Controller
 {
     public function __construct()
     {
-        // Only require auth for specific methods that need authentication
-        $this->middleware('auth')->only(['aplikasi', 'showInstansi']);
+        // Only require auth for specific instansi detail pages
+        $this->middleware('auth')->only(['showInstansi']);
     }
 
     /**
@@ -103,11 +103,11 @@ class ClientController extends Controller
     }
     
     /**
-     * Show all applications across all instansi
+     * Show all applications across all instansi (accessible to guests)
      */
     public function aplikasi(Request $request)
     {
-        $user = auth()->user();
+        $user = auth()->user(); // Can be null for guests
         
         // Get all active categories for filter
         $categories = KategoriApp::active()->ordered()->get();
@@ -140,8 +140,8 @@ class ClientController extends Controller
         // Preserve query parameters in pagination
         $apps->appends($request->query());
             
-        // Check if user has panel access
-        $hasPanelAccess = $user->hasNonDefaultPermissions();
+        // Check if user has panel access (null-safe for guests)
+        $hasPanelAccess = $user ? $user->hasNonDefaultPermissions() : false;
         
         return view('client.aplikasi', compact('apps', 'categories', 'hasPanelAccess'));
     }

@@ -26,6 +26,9 @@ Route::get('/', function () {
 // Main homepage - accessible to everyone (guests and authenticated users)
 Route::get('/beranda', [ClientController::class, 'index'])->name('client');
 
+// Aplikasi page - accessible to everyone (guests can browse, need login for details)
+Route::get('/beranda/aplikasi', [ClientController::class, 'aplikasi'])->name('client.aplikasi');
+
 Auth::routes();
 
 // debug route untuk api testing doang (remove in production)
@@ -45,7 +48,6 @@ Route::get('/dev-login', function () {
 
 // Tier 1: "Client" - pages that require authentication
 Route::middleware(['auth'])->group(function () {
-    Route::get('/beranda/aplikasi', [ClientController::class, 'aplikasi'])->name('client.aplikasi');
     Route::get('/beranda/instansi/{id}', [ClientController::class, 'showInstansi'])->name('client.instansi.show');
 });
 

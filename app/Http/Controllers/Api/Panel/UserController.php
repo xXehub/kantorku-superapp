@@ -26,7 +26,7 @@ class UserController extends Controller
                 return response()->json(['error' => 'Access denied. Super admin only.'], 403);
             }
 
-            $query = User::with(['role', 'instansi', 'masterApp']);
+            $query = User::with(['role', 'instansi', 'managedApp']);
 
             // Search functionality
             if ($request->has('search') && $request->search['value']) {
@@ -36,10 +36,10 @@ class UserController extends Controller
                         ->orWhere('username', 'like', "%{$search}%")
                         ->orWhere('email', 'like', "%{$search}%")
                         ->orWhereHas('role', function ($rq) use ($search) {
-                            $rq->where('name', 'like', "%{$search}%");
+                            $rq->where('nama_role', 'like', "%{$search}%");
                         })
                         ->orWhereHas('instansi', function ($iq) use ($search) {
-                            $iq->where('name', 'like', "%{$search}%");
+                            $iq->where('nama_instansi', 'like', "%{$search}%");
                         });
                 });
             }
@@ -92,15 +92,15 @@ class UserController extends Controller
                     'is_superadmin' => $user->is_superadmin,
                     'role' => $user->role ? [
                         'id' => $user->role->id,
-                        'name' => $user->role->name
+                        'name' => $user->role->nama_role
                     ] : null,
                     'instansi' => $user->instansi ? [
                         'id' => $user->instansi->id,
-                        'name' => $user->instansi->name
+                        'name' => $user->instansi->nama_instansi
                     ] : null,
-                    'app' => $user->masterApp ? [
-                        'id' => $user->masterApp->id,
-                        'name' => $user->masterApp->name
+                    'app' => $user->managedApp ? [
+                        'id' => $user->managedApp->id,
+                        'name' => $user->managedApp->nama_app
                     ] : null,
                     'created_at' => $user->created_at->format('d/m/Y H:i'),
                     'updated_at' => $user->updated_at->format('d/m/Y H:i'),
@@ -138,7 +138,7 @@ class UserController extends Controller
                 'password' => 'required|string|min:6',
                 'avatar' => 'nullable|string',
                 'is_superadmin' => 'boolean',
-                'role_id' => 'nullable|exists:roles,id',
+                'role_id' => 'nullable|exists:role,id',
                 'instansi_id' => 'nullable|exists:instansi,id',
                 'app_id' => 'nullable|exists:master_app,id',
             ]);
@@ -146,7 +146,7 @@ class UserController extends Controller
             $validatedData['password'] = Hash::make($validatedData['password']);
 
             $newUser = User::create($validatedData);
-            $newUser->load(['role', 'instansi', 'masterApp']);
+            $newUser->load(['role', 'instansi', 'managedApp']);
 
             return response()->json([
                 'success' => true,
@@ -214,7 +214,7 @@ class UserController extends Controller
                 'password' => 'nullable|string|min:6',
                 'avatar' => 'nullable|string',
                 'is_superadmin' => 'boolean',
-                'role_id' => 'nullable|exists:roles,id',
+                'role_id' => 'nullable|exists:role,id',
                 'instansi_id' => 'nullable|exists:instansi,id',
                 'app_id' => 'nullable|exists:master_app,id',
             ]);
